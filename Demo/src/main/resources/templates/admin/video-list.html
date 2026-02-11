@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html
+	th:replace="~{/admin/layout/home-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý video</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+	<article>
+		<div class="container card p-5 mt-5 mb-5">
+			<h2 class="text-primary text-center mb-4">Quản lý phim</h2>
+
+			<div class="mb-4 text-end">
+				<a th:href="@{/admin/video-form}" class="btn btn-primary">Thêm
+					phim</a>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table align-middle text-center">
+					<thead class="table-light">
+						<tr>
+							<th scope="col">Thumbnail</th>
+							<th scope="col">Tên phim</th>
+							<th scope="col">Danh mục</th>
+							<th scope="col">Ngôn ngữ</th>
+							<th scope="col">Hành động</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item : ${videos}">
+							<td><img src="/images/TuChienTrenKhong.jpg"
+								style="width: 100px; height: 100px" /></td>
+							<td>Tử chiến trên không</td>
+							<td>Hành Động, Hồi hộp</td>
+							<td>Tiếng Việt</td>
+							<td>
+								<form th:action="@{/delete-video}" method="post"
+									class="d-inline">
+									<input type="hidden" name="id" th:value="${item.video_id}" />
+									<a th:href="@{/admin/video-form(id=${item.video_id})}"
+										class="btn btn-danger me-1">Sửa</a>
+									<button type="submit" class="btn btn-success">Xóa</button>
+								</form>
+							</td>
+						</tr>
+						<tr th:each="item : ${videos}">
+							<td><img src="/images/Avatar2.jpg"
+								style="width: 100px; height: 100px" /></td>
+							<td>Avatar2</td>
+							<td>Hành Động, Khoa Học Viễn Tưởng, Phiêu Lưu</td>
+							<td>Tiếng Anh - Phụ đề Tiếng Việt</td>
+							<td>
+								<form th:action="@{/delete-video}" method="post"
+									class="d-inline">
+									<input type="hidden" name="id" th:value="${item.video_id}" />
+									<a th:href="@{/admin/video-form(id=${item.video_id})}"
+										class="btn btn-danger me-1">Sửa</a>
+									<button type="submit" class="btn btn-success">Xóa</button>
+								</form>
+							</td>
+						</tr>
+						<tr th:each="item : ${videos}">
+							<td><img src="/images/ChainsawMan.jpg"
+								style="width: 100px; height: 100px" /></td>
+							<td>ChainsawMan</td>
+							<td>Hành Động, Hoạt Hình, Thần thoại</td>
+							<td>Tiếng Nhật – Phụ đề Tiếng Việt, Tiếng Anh</td>
+							<td>
+								<form th:action="@{/delete-video}" method="post"
+									class="d-inline">
+									<input type="hidden" name="id" th:value="${item.video_id}" />
+									<a th:href="@{/admin/video-form(id=${item.video_id})}"
+										class="btn btn-danger me-1">Sửa</a>
+									<button type="submit" class="btn btn-success">Xóa</button>
+								</form>
+							</td>
+						</tr>
+						<tr th:each="item : ${videos}">
+							<td><img src="/images/ThanhGuomDietQuy.jpg"
+								style="width: 100px; height: 100px" /></td>
+							<td>Thanh Gươm Diệt Quỷ: Vô Hạn Thành</td>
+							<td>Hành Động, Hoạt Hình</td>
+							<td>Tiếng Nhật - Phụ đề Tiếng Việt & Tiếng Anh</td>
+							<td>
+								<form th:action="@{/delete-video}" method="post"
+									class="d-inline">
+									<input type="hidden" name="id" th:value="${item.video_id}" />
+									<a th:href="@{/admin/video-form(id=${item.video_id})}"
+										class="btn btn-danger me-1">Sửa</a>
+									<button type="submit" class="btn btn-success">Xóa</button>
+								</form>
+							</td>
+						</tr>
+						<tr th:if="${#lists.isEmpty(videos)}">
+							<td colspan="5" class="text-muted">Không có video nào.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</article>
+</body>
+</html>

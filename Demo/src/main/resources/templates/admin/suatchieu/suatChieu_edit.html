@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Sửa Suất Chiếu</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<style>
+.time-select {
+	width: 80px;
+	height: 38px;
+	line-height: 38px;
+	font-size: 1rem;
+}
+
+.time-label {
+	min-width: 110px;
+}
+
+.time-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+</style>
+</head>
+<body>
+	<article>
+		<div class="container mt-3">
+			<h3 class="mb-4">Sửa Suất Chiếu</h3>
+
+			<form th:object="${suatChieu}" method="post"
+				th:action="@{/admin/suatchieu/edit}">
+				<input type="hidden" th:field="*{id}" />
+
+				<div class="mb-3">
+					<label>Ngày chiếu:</label> <input type="date" class="form-control"
+						th:field="*{date}" />
+						 <i th:errors="*{date}" class="text-danger"></i>
+				</div>
+
+				<div class="mb-3 d-flex align-items-center">
+					<label class="me-2 mb-0">Giờ bắt đầu:</label> <select
+						class="form-select me-2" id="gioBatDau-gio" style="width: 80px;">
+						<option th:each="h : ${#numbers.sequence(0,23)}" th:value="${h}"
+							th:text="${h < 10 ? '0' + h : h}"></option>
+					</select> : <select class="form-select ms-2" id="gioBatDau-phut"
+						style="width: 80px;">
+						<option value="00">00</option>
+						<option value="15">15</option>
+						<option value="30">30</option>
+						<option value="45">45</option>
+					</select> <input type="hidden" th:field="*{gioBatDau}" id="gioBatDau-hidden"
+						th:value="${suatChieu.gioBatDau != null} ? ${suatChieu.gioBatDau.format(T(java.time.format.DateTimeFormatter).ofPattern('HH:mm'))} : ''" />
+				</div>
+
+				<div class="mb-3 d-flex align-items-center">
+					<label for="gioKetThuc" class="form-label me-2 mb-0">Giờ
+						kết thúc:</label> <input type="text" class="form-control" id="gioKetThuc"
+						readonly style="width: 100px;" />
+				</div>
+
+
+				<div class="mb-3">
+					<label class="form-label">Phiên bản phim:</label> <select
+						class="form-select" th:field="*{detailFilm.id}" required
+						id="detailFilmSelect">
+						<option value="" disabled th:if="${suatChieu.detailFilm == null}"
+							selected>-- Chọn phim --</option>
+						<option th:each="df : ${detailFilms}" th:value="${df.id}"
+							th:text="${df.film != null && df.date != null} ? ${df.film.name + ' - ' + #temporals.format(df.date,'dd/MM/yyyy')} : ''"
+							th:attr="data-thoi-luong=${df.thoiLuong}"
+							th:selected="${suatChieu.detailFilm != null} ? ${df.id} == ${suatChieu.detailFilm.id} : false">
+						</option>
+					</select>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Phòng:</label> <select
+						class="form-select" th:field="*{room.id}" required>
+						<option value="" disabled th:if="${suatChieu.room == null}"
+							selected>-- Chọn phòng --</option>
+						<option th:each="room : ${rooms}" th:value="${room.id}"
+							th:text="${room.name}"
+							th:selected="${suatChieu.room != null} ? ${room.id} == ${suatChieu.room.id} : false">
+						</option>
+					</select>
+				</div>
+
+				<button class="btn btn-primary me-2" type="submit">Cập nhật</button>
+				<a class="btn btn-secondary" th:href="@{/admin/suatchieu/list}">Hủy</a>
+			</form>
+		</div>
+
+		<script>
+        const gioBatDauGio = document.getElementById('gioBatDau-gio');
+        const gioBatDauPhut = document.getElementById('gioBatDau-phut');
+        const gioBatDauHidden = document.getElementById('gioBatDau-hidden');
+        const gioKetThucInput = document.getElementById('gioKetThuc');
+        const detailFilmSelect = document.getElementById('detailFilmSelect');
+
+        function updateGioKetThuc() {
+            const hour = parseInt(gioBatDauGio.value || 0);
+            const minute = parseInt(gioBatDauPhut.value || 0);
+            const selectedOption = detailFilmSelect.selectedOptions[0];
+            const thoiLuong = selectedOption ? parseInt(selectedOption.dataset.thoiLuong) : 0;
+
+            gioBatDauHidden.value = `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+
+            if (!thoiLuong) {
+                gioKetThucInput.value = "";
+                return;
+            }
+
+            let endHour = hour + Math.floor((minute + thoiLuong) / 60);
+            let endMinute = (minute + thoiLuong) % 60;
+            endHour = endHour % 24;
+
+            gioKetThucInput.value = `${endHour.toString().padStart(2,'0')}:${endMinute.toString().padStart(2,'0')}`;
+        }
+
+        window.addEventListener('load', () => {
+            if (gioBatDauHidden.value) {
+                const [h, m] = gioBatDauHidden.value.split(':');
+                gioBatDauGio.value = parseInt(h, 10);
+                gioBatDauPhut.value = parseInt(m, 10);
+            }
+            updateGioKetThuc();
+        });
+
+        gioBatDauGio.addEventListener('change', updateGioKetThuc);
+        gioBatDauPhut.addEventListener('change', updateGioKetThuc);
+        detailFilmSelect.addEventListener('change', updateGioKetThuc);
+        
+    </script>
+	</article>
+</body>
+</html>

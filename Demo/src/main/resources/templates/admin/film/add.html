@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Thêm mới Phim</title>
+</head>
+<body>
+	<article>
+		<div class="mt-3">
+			<h3 class="mb-3 mt-3">Thêm phim mới</h3>
+
+			<form class="row" th:object="${film}" th:action="@{/admin/film/add}"
+				method="post" enctype="multipart/form-data">
+
+				<div class="col-lg-6">
+
+					<!-- Tên phim -->
+					<div class="mb-3">
+						<label class="form-label">Tên phim</label> <input type="text"
+							class="form-control" th:field="*{name}"> <i
+							th:if="${#fields.hasErrors('name')}"
+							th:text="${#fields.errors('name')[0]}" class="text-danger"></i>
+					</div>
+
+					<!-- Đạo diễn -->
+					<div class="mb-3">
+						<label class="form-label">Đạo diễn</label> <input type="text"
+							class="form-control" th:field="*{detailFilm.daoDien}"> <i
+							th:if="${#fields.hasErrors('detailFilm.daoDien')}"
+							th:text="${#fields.errors('detailFilm.daoDien')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<!-- Diễn viên -->
+					<div class="mb-3">
+						<label class="form-label">Diễn viên</label> <input type="text"
+							class="form-control" th:field="*{detailFilm.dienVien}"> <i
+							th:if="${#fields.hasErrors('detailFilm.dienVien')}"
+							th:text="${#fields.errors('detailFilm.dienVien')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<!-- Thể loại -->
+					<div class="mb-3">
+						<label class="form-label">Thể loại</label> <select
+							id="categorySelect" th:field="*{categoryIds}" multiple>
+							<option th:each="category : ${allCategories}"
+								th:value="${category.id}" th:text="${category.name}"></option>
+						</select> <i th:if="${#fields.hasErrors('categoryIds')}"
+							th:text="${#fields.errors('categoryIds')[0]}" class="text-danger"></i>
+					</div>
+
+					<!-- Ngày chiếu -->
+					<div class="mb-3">
+						<label class="form-label">Ngày chiếu</label> <input type="date"
+							class="form-control" th:field="*{detailFilm.date}"> <i th:errors="*{detailFilm.date}" class="text-danger"></i>
+					</div>
+
+					<!-- Thời lượng -->
+					<div class="mb-3">
+						<label class="form-label">Thời lượng</label> <input type="number"
+							class="form-control" th:field="*{detailFilm.thoiLuong}">
+						<i th:if="${#fields.hasErrors('detailFilm.thoiLuong')}"
+							th:text="${#fields.errors('detailFilm.thoiLuong')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<!-- Ngôn ngữ -->
+					<div class="mb-3">
+						<label class="form-label">Ngôn ngữ</label> <input type="text"
+							class="form-control" th:field="*{detailFilm.ngonNgu}"> <i
+							th:if="${#fields.hasErrors('detailFilm.ngonNgu')}"
+							th:text="${#fields.errors('detailFilm.ngonNgu')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Lưu</button>
+					<a th:href="@{/admin/film/list}" class="btn btn-secondary">Quay
+						lại</a>
+				</div>
+
+				<div class="col-lg-6">
+
+					<!-- Rated -->
+					<div class="mb-3">
+						<label class="form-label">Rated</label> <input type="text"
+							class="form-control" th:field="*{detailFilm.rate}"> <i
+							th:if="${#fields.hasErrors('detailFilm.rate')}"
+							th:text="${#fields.errors('detailFilm.rate')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<!-- Trailer -->
+					<div class="mb-3">
+						<label class="form-label">Trailer</label> <input type="text"
+							class="form-control" th:field="*{trailer}"> <i
+							th:if="${#fields.hasErrors('trailer')}"
+							th:text="${#fields.errors('trailer')[0]}" class="text-danger"></i>
+					</div>
+
+					<!-- Ảnh -->
+					<div class="mb-3">
+						<label class="form-label">Ảnh</label> <input type="file"
+							class="form-control" name="photo"> <i
+							th:if="${#fields.hasErrors('avatar')}"
+							th:text="${#fields.errors('avatar')[0]}" class="text-danger"></i>
+					</div>
+
+					<!-- Trạng thái -->
+					<div class="mb-3">
+						<label class="form-label">Trạng thái</label><br> <input
+							type="radio" th:field="*{status}" value="1"> Đang chiếu <input
+							type="radio" th:field="*{status}" value="2" class="ms-3">
+						Sắp chiếu <input type="radio" th:field="*{status}" value="3"
+							class="ms-3"> Ngừng chiếu <i
+							th:if="${#fields.hasErrors('status')}"
+							th:text="${#fields.errors('status')[0]}" class="text-danger"></i>
+					</div>
+
+					<!-- Loại phim -->
+					<div class="mb-3">
+						<label class="form-label">Loại phim</label><br> <input
+							type="radio" th:field="*{type}" value="1"> Phim chiếu rạp
+						<input type="radio" th:field="*{type}" value="0" class="ms-3">
+						Phim khác <i th:if="${#fields.hasErrors('type')}"
+							th:text="${#fields.errors('type')[0]}" class="text-danger"></i>
+					</div>
+
+				</div>
+			</form>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				new Choices('#categorySelect', {
+					removeItemButton : true,
+					searchEnabled : true,
+					searchPlaceholderValue : 'Tìm kiếm thể loại...',
+					noResultsText : 'Không tìm thấy kết quả'
+				});
+			});
+		</script>
+	</article>
+</body>
+</html>

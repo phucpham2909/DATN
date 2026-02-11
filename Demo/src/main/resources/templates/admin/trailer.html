@@ -1,0 +1,7 @@
+<div th:if="${video.trailer != null}">
+    <label class="form-label">Trailer</label>
+    <div class="ratio ratio-16x9">
+        <iframe th:src="@{${#strings.replace(video.trailer, 'watch?v=', 'embed/')}}" 
+                title="Trailer" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>

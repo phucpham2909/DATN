@@ -1,0 +1,161 @@
+<nav style="width: 230px;">
+	<div class="pt-3">
+		<h5 class="mb-4">Quản trị viên</h5>
+		<ul class="nav nav-pills flex-column">
+
+			<li class="nav-item mb-2"><a
+				class="nav-link rounded d-flex justify-content-between align-items-center"
+				data-bs-toggle="collapse" href="#thongKeCha" role="button"
+				aria-expanded="false" aria-controls="thongKeCha"
+				th:classappend="${activeParent == 'thongKe'} ? ' active'"> <span><i
+						class="fa-solid fa-chart-line me-2"></i>Thống kê</span> <i
+					class="fa-solid fa-chevron-down small thongke-chevron"></i>
+			</a>
+				<div class="collapse ps-3 mt-1" id="thongKeCha"
+					th:classappend="${activeParent == 'thongKe'} ? ' show'">
+					<ul class="nav flex-column">
+						<li class="nav-item mb-2"><a class="nav-link rounded"
+							th:href="@{/admin/index}"
+							th:classappend="${activePage == 'index'} ? ' active'"> <i
+								class="fa-solid fa-chart-line me-2"></i>Bảng điều hướng
+						</a></li>
+						<li class="nav-item mb-2"><a class="nav-link rounded"
+							th:href="@{/admin/dashboard/ve}"
+							th:classappend="${activePage == 've'} ? ' active'"> <i
+								class="fa-solid fa-ticket me-2"></i>Doanh thu vé
+						</a></li>
+						<li class="nav-item mb-2"><a class="nav-link rounded"
+							th:href="@{/admin/dashboard/product}"
+							th:classappend="${activePage == 'sp'} ? ' active'"> <i
+								class="fa-solid fa-basket-shopping me-2"></i>Doanh thu sản phẩm
+						</a></li>
+					</ul>
+				</div></li>
+
+			<li class="nav-item mb-2"><a class="nav-link rounded"
+				th:href="@{/admin/account-manager}"
+				th:classappend="${activePage == 'account-manager'} ? ' active'">
+					<i class="fa-solid fa-users me-2"></i> Quản lý tài khoản
+			</a></li>
+
+			<li class="nav-item mb-2"><a
+				class="nav-link rounded d-flex justify-content-between align-items-center"
+				data-bs-toggle="collapse" href="#cinemaMenu" role="button"
+				aria-expanded="false" aria-controls="cinemaMenu"
+				th:classappend="${activeParent == 'cinema'} ? ' active'"> <span><i
+						class="fa-solid fa-theater-masks me-2"></i> Quản lý rạp</span> <i
+					class="fa-solid fa-chevron-down small cinema-chevron"></i>
+			</a>
+				<div class="collapse ps-3 mt-1" id="cinemaMenu"
+					th:classappend="${activeParent == 'cinema'} ? ' show'">
+					<ul class="nav flex-column">
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/cinema/list}"
+							th:classappend="${activePage == 'cinemas'} ? ' active'"> <i
+								class="fa-solid fa-building me-2"></i> Chi nhánh
+						</a></li>
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/room/list}"
+							th:classappend="${activePage == 'room'} ? ' active'"> <i
+								class="fa-solid fa-door-open me-2"></i> Phòng
+						</a></li>
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/seats/dashboard}"
+							th:classappend="${activePage == 'seats'} ? ' active'"> <i
+								class="fa-solid fa-chair me-2"></i> Ghế
+						</a></li>
+					</ul>
+				</div></li>
+
+			<li class="nav-item mb-2"><a
+				class="nav-link rounded d-flex justify-content-between align-items-center"
+				data-bs-toggle="collapse" href="#filmMenu" role="button"
+				aria-expanded="false" aria-controls="filmMenu"
+				th:classappend="${activeParent == 'film'} ? ' active'"> <span><i
+						class="fa-solid fa-film me-2"></i> Quản lý phim</span> <i
+					class="fa-solid fa-chevron-down small film-chevron"></i>
+			</a>
+				<div class="collapse ps-3 mt-1" id="filmMenu"
+					th:classappend="${activeParent == 'film'} ? ' show'">
+					<ul class="nav flex-column">
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/categories}"
+							th:classappend="${activePage == 'film-category'} ? ' active'">
+								Danh sách danh mục </a></li>
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/film/list}"
+							th:classappend="${activePage == 'film'} ? ' active'"> Danh
+								sách phim </a></li>
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/film/posters}"
+							th:classappend="${activePage == 'poster'} ? ' active'">
+								Poster phim </a></li>
+					</ul>
+				</div></li>
+
+			<li class="nav-item mb-2"><a class="nav-link rounded"
+				th:href="@{/admin/suatchieu/list}"
+				th:classappend="${activePage == 'suatchieu'} ? ' active'"> <i
+					class="fa-solid fa-video me-2"></i> Quản lý suất chiếu
+			</a></li>
+			<li class="nav-item mb-2"><a class="nav-link rounded"
+				th:href="@{/admin/booking/bookings}"
+				th:classappend="${activePage == 'booking'} ? ' active'"> <i
+					class="fa-solid fa-ticket me-2"></i> Quản lý đặt vé
+			</a></li>
+			<li class="nav-item mb-2"><a
+				class="nav-link rounded d-flex justify-content-between align-items-center"
+				data-bs-toggle="collapse" href="#productMenu" role="button"
+				aria-expanded="false" aria-controls="productMenu"
+				th:classappend="${activeParent == 'product'} ? ' active'"> <span><i
+						class="fa-solid fa-glass-water-droplet me-2"></i>Quản lý sản phẩm</span>
+					<i class="fa-solid fa-chevron-down small product-chevron"></i>
+			</a>
+				<div class="collapse ps-3 mt-1" id="productMenu"
+					th:classappend="${activeParent == 'product'} ? ' show'">
+					<ul class="nav flex-column">
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/category-product}"
+							th:classappend="${activePage == 'cat-product'} ? ' active'">
+								Danh mục sản phẩm </a></li>
+						<li class="nav-item mb-1"><a class="nav-link"
+							th:href="@{/admin/product/list}"
+							th:classappend="${activePage == 'products'} ? ' active'"> Sản
+								phẩm </a></li>
+					</ul>
+				</div></li>
+
+			<li class="nav-item mb-2"><a
+				class="nav-link rounded d-flex justify-content-between align-items-center"
+				data-bs-toggle="collapse" href="#setting" role="button"
+				aria-expanded="false" aria-controls="setting"
+				th:classappend="${activeParent == 'setting'} ? ' active'"> <span><i
+						class="fa-solid fa-cogs me-2"></i>Cài đặt</span> <i
+					class="fa-solid fa-chevron-down small setting-chevron"></i>
+			</a>
+				<div class="collapse ps-3 mt-1" id="setting"
+					th:classappend="${activeParent == 'setting'} ? ' show'">
+					<ul class="nav flex-column">
+						<li class="nav-item mb-2"><a class="nav-link rounded"
+							th:href="@{/logout}"> Đăng xuất </a></li>
+					</ul>
+				</div></li>
+
+		</ul>
+	</div>
+</nav>
+
+<style>
+.rotate {
+	transform: rotate(180deg);
+	transition: 0.3s ease;
+}
+</style>
+<script>
+document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(toggle => {
+  toggle.addEventListener('click', function () {
+    const icon = this.querySelector('.fa-chevron-down');
+    if (icon) icon.classList.toggle('rotate');
+  });
+});
+</script>

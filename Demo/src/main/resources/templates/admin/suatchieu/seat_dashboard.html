@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý ghế theo chi nhánh</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body class="bg-light">
+	<article>
+		<div class="container py-5">
+			<h3 class="text-center mb-4 fw-bold text-dark">🎬 Quản lý Ghế -
+				Theo Chi nhánh</h3>
+
+			<form method="get" th:action="@{/admin/seats/dashboard}"
+				class="row justify-content-center mb-4">
+				<div class="col-md-5">
+					<select name="cinemaId" class="form-select" required
+						onchange="this.form.submit()">
+						<option value="" disabled th:unless="${selectedCinema}" selected>--
+							Chọn chi nhánh --</option>
+						<option th:each="c : ${cinemas}" th:value="${c.id}"
+							th:text="${c.name}"
+							th:selected="${selectedCinema != null and c.id == selectedCinema.id}"></option>
+					</select>
+				</div>
+			</form>
+
+			<div th:if="${selectedCinema}">
+				<h4 class="text-center text-success mb-3"
+					th:text="'Các phòng tại ' + ${selectedCinema.name}"></h4>
+				<div class="row justify-content-center">
+					<div class="col-md-8">
+						<table class="table table-striped align-middle">
+							<thead class="table-dark">
+								<tr class="text-center text-light">
+									<th>Tên phòng</th>
+									<th>Sức chứa</th>
+									<th>Hành động</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="room : ${rooms}" class="text-center align-middle">
+									<td th:text="${room.name}"></td>
+									<td th:text="${room.capacity}"></td>
+									<td><a
+										th:href="@{/admin/seats/room/{id}(id=${room.id}, cinemaId=${selectedCinema.id})}"
+										class="btn btn-outline-primary btn-sm">🪑 Xem ghế</a> <a
+										th:if="${#lists.isEmpty(room.seats)}"
+										th:href="@{/admin/seats/create/{id}(id=${room.id})}"
+										class="btn btn-success btn-sm ms-2">➕ Tạo ghế</a></td>
+								</tr>
+								<tr th:if="${#lists.isEmpty(rooms)}">
+									<td colspan="3" class="text-center text-muted">Chưa có
+										phòng nào trong chi nhánh này</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</article>
+</body>
+</html>

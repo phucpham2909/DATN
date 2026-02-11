@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/shared/layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="utf-8">
+<title>Movie Theme</title>
+</head>
+
+<body>
+	<article>
+		<div class="main_2 clearfix">
+			<section id="center" class="center_home">
+				<div id="carouselExampleCaptions" class="carousel slide"
+					data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<div th:each="film, iterStat : ${carouselFilms}"
+							th:class="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+							<a th:href="@{/film/detail(id=${film.id})}"> <img
+								th:src="@{'/poster-images/' + ${film.poster}}"
+								class="d-block w-100 h-100 img-fluid "
+								style="height: 100%; object-fit: cover;">
+							</a>
+						</div>
+					</div>
+
+					<button class="carousel-control-prev" type="button"
+						data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button"
+						data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
+				</div>
+
+			</section>
+		</div>
+
+		<div class="border_dashed"></div>
+
+		<section id="join" class="px_4 p_3">
+			<div class="container-fluid">
+				<div class="row join_1">
+					<div class="col-md-4">
+						<div class="join_1l position-relative">
+							<div class="join_1li">
+								<img src="img/4.jpg" class="w-100" alt="abc">
+							</div>
+							<div
+								class="join_1li1 p-4 bg_backo position-absolute w-100 h-100 top-0">
+								<div class="join_1li1n row">
+									<div class="col-md-8">
+										<div class="join_1li1l">
+											<h6 class="text-light" th:text="#{til2.joinNow}">Join
+												Now</h6>
+											<h3 class="mb-0 text-white"
+												th:utext="#{section.upcomingFestivals}">
+												Upcoming <br> Film Festivals
+											</h3>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="join_1li1r">
+											<span
+												class="d-inline-block bg_oran text-white rounded-circle text-center font_50"><i
+												class="fa fa-video-camera"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="join_1l position-relative">
+							<div class="join_1li">
+								<img src="img/4.jpg" class="w-100" alt="abc">
+							</div>
+							<div
+								class="join_1li1 p-4 bg_backo position-absolute w-100 h-100 top-0">
+								<div class="join_1li1n row">
+									<div class="col-md-8">
+										<div class="join_1li1l">
+											<h6 class="text-light" th:text="#{til2.watchNow}">Watch
+												Now</h6>
+											<h3 class="mb-0 text-white"
+												th:utext="#{section.watchFilmAwards}">
+												Watch Film <br> Awards
+											</h3>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="join_1li1r">
+											<span
+												class="d-inline-block bg_oran text-white rounded-circle text-center font_50"><i
+												class="fa fa-film"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="join_1l position-relative">
+							<div class="join_1li">
+								<img src="img/4.jpg" class="w-100" alt="abc">
+							</div>
+							<div
+								class="join_1li1 p-4 bg_backo position-absolute w-100 h-100 top-0">
+								<div class="join_1li1n row">
+									<div class="col-md-8">
+										<div class="join_1li1l">
+											<h6 class="text-light" th:text="#{btn.getTicket	}">Get
+												Ticket</h6>
+											<h3 class="mb-0 text-white" th:utext="#{section.comedyTV}">
+												Comedy TV <br> Shows
+											</h3>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="join_1li1r">
+											<span
+												class="d-inline-block bg_oran text-white rounded-circle text-center font_50"><i
+												class="fa fa-microphone"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="trend" class="p_3 pt-0">
+			<div class="container-xl">
+				<div class="row trend_1 text-center mb-4">
+					<div class="col-md-12">
+						<span class="fa fa-film col_oran"></span>
+						<h6 class="text-muted mt-3" th:text="#{til2.newMovie}">Watch
+							New Movies</h6>
+						<h1 class="mb-0 font_50" th:text="#{til2.movieSection}">Movies
+							Section</h1>
+					</div>
+				</div>
+				<div id="carouselFilms" class="carousel slide"
+					data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<div th:each="chunk, chunkStat : ${filmChunks}"
+							th:classappend="${chunkStat.index == 0} ? ' active'"
+							class="carousel-item">
+
+							<div
+								class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
+								<div class="col" th:each="film : ${chunk}">
+									<div class="card h-100 shadow-sm d-flex flex-column">
+										<a th:href="@{/film/detail(id=${film.id})}" class="d-block">
+											<img th:src="@{${film.avatar}}" class="card-img-top"
+											style="height: 500px; object-fit: cover;"
+											th:alt="${film.name}">
+										</a>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<button class="carousel-control-prev" type="button"
+						data-bs-target="#carouselFilms" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon"></span>
+					</button>
+					<button class="carousel-control-next" type="button"
+						data-bs-target="#carouselFilms" data-bs-slide="next">
+						<span class="carousel-control-next-icon"></span>
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<section id="feat" class="p_3 bg-light">
+			<div class="container-xl">
+				<div class="row feat_1 mb-5">
+					<div class="col-md-6">
+						<div class="feat_1l">
+							<span class="fa fa-film col_oran"></span>
+							<h6 class="text-muted mt-3" th:text="#{til2.checkoutMovie}">Checkout
+								Movies</h6>
+							<h1 class="mb-0 font_50" th:text="#{til2.topFeatured}">Top
+								Featured Movies</h1>
+						</div>
+					</div>
+				</div>
+				<div class="row feat_2 text-center">
+					<div class="col-md-4 col-sm-6 text-center"
+						th:each="film : ${topRevenueFilms}">
+						<div class="feat_2i shadow_box rounded overflow-hidden mb-4">
+							<!-- Hình ảnh phim -->
+							<a th:href="@{/film/detail(id=${film.id})}"> <img
+								th:if="${film.avatar != null}" th:src="@{${film.avatar}}"
+								th:alt="${film.name}" class="w-100"
+								style="height: 600px; object-fit: cover;">
+							</a>
+
+							<!-- Thông tin bên dưới ảnh -->
+							<div class="p-4 bg-white">
+								<h5 class="fw-bold text-uppercase mb-3" th:text="${film.name}"></h5>
+
+								<div class="d-flex justify-content-center gap-3">
+									<a th:href="@{/film/detail(id=${film.id})}"
+										class="btn btn-outline-danger px-3 py-2 "> <i
+										class="fa fa-play-circle me-1"></i> <span
+										th:text="#{btn.trailer}">Get Ticket</span>
+									</a> <a th:href="@{'/booking/choose-show/' + ${film.id}}"
+										class="btn btn-outline-danger px-3 py-2"> <i
+										class="fa fa-ticket me-1"></i><span th:text="#{btn.getTicket}">Get
+											Ticket</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="choose">
+			<div class="choose_m bg_backo pt-5 pb-5">
+				<div class="container-xl">
+					<div class="choose_1 row">
+						<div class="col-md-6 col-sm-6">
+							<div class="choose_1l">
+								<span class="fa fa-film col_oran"></span>
+								<h6 class="text-white-50 mt-3" th:text="#{til2.documentary}">Documentary</h6>
+								<h1 class="font_50 text-white" th:text="#{til2.nowPlaying}">Movies
+									Now Playing</h1>
+								<h6 class="mb-0 mt-4">
+									<a class="button_1" th:href="@{/film/nowShowing}"
+										th:text="#{btn.moreInfo}">More Info</a>
+								</h6>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6">
+							<div class="choose_1r text-center mt-3">
+								<h4 class="text-white mb-0">
+									Watch the Trailer <span class="ms-2"><a class="col_oran"
+										href="javascript:void(0);" data-bs-toggle="modal"
+										data-bs-target="#templateVideoModal"><i
+											class="fa fa-play-circle align-middle"></i></a></span>
+								</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="gallery" class="px_4 p_3">
+			<div class="container-fluid">
+				<div class="row gallery_1 text-center mb-4">
+					<div class="col-md-12">
+						<h1 class="mb-0" th:text="#{til2.gallery}">Our Photo Gallery</h1>
+					</div>
+				</div>
+				<div class="row gallery_2">
+					<div class="col">
+						<div class="gallery_2i">
+							<div class="gallery_2i1">
+								<div class="grid clearfix">
+									<figure class="mb-0">
+										<img src="images/anhrapphim.jpg" class="w-100"
+											style="height: 100px;" alt="abc">
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="gallery_2i">
+							<div class="gallery_2i1">
+								<div class="grid clearfix">
+									<figure class="mb-0">
+										<img src="images/sanhcho.jpg" class="w-100"
+											style="height: 100px;" alt="abc">
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="gallery_2i">
+							<div class="gallery_2i1">
+								<div class="grid clearfix">
+									<figure class="mb-0">
+										<img src="images/quaycheckin.jpg" class="w-100"
+											style="height: 100px;" alt="abc">
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="gallery_2i">
+							<div class="gallery_2i1">
+								<div class="grid clearfix">
+									<figure class="mb-0">
+										<img src="images/popcorn.jpg" class="w-100"
+											style="height: 100px;" alt="abc">
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="gallery_2i">
+							<div class="gallery_2i1">
+								<div class="grid clearfix">
+									<figure class="mb-0">
+										<img src="images/cinema.jpg" class="w-100"
+											style="height: 100px;" alt="abc">
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 	<section id="event" class="p_3">
+		<div class="container-xl">
+			<div class="row event_1">
+				<div class="col-md-6">
+					<div class="event_1l pt-5">
+						<span class="fa fa-film col_oran"></span>
+						<h6 class="text-muted mt-3">Upcoming Event</h6>
+						<h1 class="mb-0 font_50">Register Yourself Now for the Events</h1>
+						<p class="mt-3">Every man must decide whether he will walk in
+							the light of creative altruism or in the darkness of
+							eritdestructive selfishness. Ut porttitor et lectus ut tempus.
+							Aliquam lacinia justo.</p>
+						<h6 class="mb-0 mt-4">
+							<a class="button_2" href="#">More Info</a>
+						</h6>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="event_1r">
+						<div class="event_1ri row">
+							<div class="col-md-5 p-0 col-sm-5">
+								<div class="event_1ril position-relative">
+									<div class="event_1ril1">
+										<div class="grid clearfix">
+											<figure class="effect-jazz mb-0">
+												<a href="#"><img src="img/17.jpg" height="240"
+													class="w-100" alt="abc"></a>
+											</figure>
+										</div>
+									</div>
+									<div class="event_1ril2 position-absolute w-100 top-0">
+										<h6
+											class="mb-0 d-inline-block bg_oran text-white p-2 px-4 font_14">
+											22 MAR, 2024</h6>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-7 p-0 col-sm-7">
+								<div class="event_1rir px-4 shadow_box">
+									<h6 class="font_14">
+										<i class="fa fa-clock-o col_oran me-1"></i> 14:00 - 18:00 <i
+											class="fa fa-map-marker col_oran me-1 ms-3"></i> New York
+									</h6>
+									<h5 class="mt-3">
+										<a href="#">Best Magical Movies Ever Made</a>
+									</h5>
+									<h6 class="mb-0 mt-4">
+										<a class="button_2" href="#">Read More</a>
+									</h6>
+								</div>
+							</div>
+						</div>
+						<div class="event_1ri row mt-4">
+							<div class="col-md-5 p-0 col-sm-5">
+								<div class="event_1ril position-relative">
+									<div class="event_1ril1">
+										<div class="grid clearfix">
+											<figure class="effect-jazz mb-0">
+												<a href="#"><img src="img/18.jpg" height="240"
+													class="w-100" alt="abc"></a>
+											</figure>
+										</div>
+									</div>
+									<div class="event_1ril2 position-absolute w-100 top-0">
+										<h6
+											class="mb-0 d-inline-block bg_oran text-white p-2 px-4 font_14">
+											23 MAR, 2024</h6>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-7 p-0 col-sm-7">
+								<div class="event_1rir px-4 shadow_box">
+									<h6 class="font_14">
+										<i class="fa fa-clock-o col_oran me-1"></i> 16:00 - 19:00 <i
+											class="fa fa-map-marker col_oran me-1 ms-3"></i> London
+									</h6>
+									<h5 class="mt-3">
+										<a href="#">The Strange Love Movie 2023 Festival</a>
+									</h5>
+									<h6 class="mb-0 mt-4">
+										<a class="button_2" href="#">Read More</a>
+									</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<section id="testim" class="p_3 bg-light carousel_p">
+		<div class="container-xl">
+			<div class="row testim_1">
+				<div class="col-md-6">
+					<div class="testim_1l">
+						<span class="fa fa-film col_oran"></span>
+						<h6 class="text-muted mt-3">Our Feedbacks</h6>
+						<h1 class="mb-0 font_50">What They’re Talking About us?</h1>
+						<p class="mt-3">Every man must decide whether he will walk in
+							the light of creative altruism or in the darkness of
+							eritdestructive selfishness. Ut porttitor et lectus ut tempus.
+							Aliquam lacinia justo.</p>
+						<h6 class="mb-0 mt-4">
+							<a class="button_2" href="#">View All Feedbacks</a>
+						</h6>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="testim_1r mt-5">
+						<div id="carouselExampleCaptions2" class="carousel slide"
+							data-bs-ride="carousel">
+							<div class="carousel-indicators">
+								<button type="button" data-bs-target="#carouselExampleCaptions2"
+									data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+								<button type="button" data-bs-target="#carouselExampleCaptions2"
+									data-bs-slide-to="1" aria-label="Slide 2" class=""
+									aria-current="true"></button>
+							</div>
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div class="testim_1i row">
+										<div class="col-md-12">
+											<div class="testim_1i1 bg-white p-4 clearfix">
+												<span
+													class="d-inline-block bg_oran text-white text-center span_1 rounded-circle"><i
+													class="fa fa-quote-left"></i></span>
+												<div class="testim_1i1i clearfix mt-3">
+													<span><img src="img/19.jpg" alt="abc"
+														class="rounded-circle me-3 float-start"></span>
+													<h6 class="mb-0 fw-bold text-uppercase">
+														Eget Nulla <br> <span
+															class="col_oran font_14 fw-normal">Customer</span>
+													</h6>
+												</div>
+												<p class="mb-0 mt-3">Lorem Ipsum is simply dummy text of
+													the printing and typesetting industry. Lorem Ipsum has been
+													the industry’s standard dummy text ever since the 1500s,
+													when an unknown printer typesetting, remaining essentially
+													unchanged.</p>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div class="carousel-item">
+									<div class="testim_1i row">
+										<div class="col-md-12">
+											<div class="testim_1i1 bg-white p-4 clearfix">
+												<span
+													class="d-inline-block bg_oran text-white text-center span_1 rounded-circle"><i
+													class="fa fa-quote-left"></i></span>
+												<div class="testim_1i1i clearfix mt-3">
+													<span><img src="img/20.jpg" alt="abc"
+														class="rounded-circle me-3 float-start"></span>
+													<h6 class="mb-0 fw-bold text-uppercase">
+														Lorem Porta <br> <span
+															class="col_oran font_14 fw-normal">Customer</span>
+													</h6>
+												</div>
+												<p class="mb-0 mt-3">Lorem Ipsum is simply dummy text of
+													the printing and typesetting industry. Lorem Ipsum has been
+													the industry’s standard dummy text ever since the 1500s,
+													when an unknown printer typesetting, remaining essentially
+													unchanged.</p>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+ -->
+		<section id="trend_o" class="p_3 px_4">
+			<div class="container-fluid">
+				<div class="row trend_1 text-center mb-4">
+					<div class="col-md-12">
+						<span class="fa fa-film col_oran"></span>
+						<h6 class="text-muted mt-3" th:text="#{til2.newUpcoming}">New
+							Upcoming Movies</h6>
+						<h1 class="mb-0 font_50" th:text="#{til2.moviesSoon}">Movies
+							Coming Soon</h1>
+					</div>
+				</div>
+
+				<!-- Lặp qua danh sách phim sắp chiếu -->
+				<div class="row trend_2">
+					<div class="me-2 mb-3">
+						<a th:href="@{/film/comingSoon}"
+							class=" px-4 py-2 rounded-pill fw-semibold"><i
+							class="fa fa-film me-2"></i><span th:text="#{til2.allSoon}">Get
+								Ticket</span> </a>
+					</div>
+					<div class="col-md-3 col-sm-6" th:each="film : ${comingSoonFilms}">
+						<div class="trend_2i position-relative">
+							<div class="trend_2i1">
+								<img th:if="${film.avatar != null}" th:src="@{${film.avatar}}"
+									th:alt="${film.name}" class="w-100"
+									style="height: 500px; object-fit: cover;">
+
+
+							</div>
+
+							<div
+								class="trend_2i2 bg_back position-absolute w-100 h-100 top-0 px-4 d-flex flex-column justify-content-center">
+								<h5>
+									<a class="text-white a_tag"
+										th:href="@{/film/detail(id=${film.id})}"
+										th:text="${film.name}">Tên phim</a>
+								</h5>
+								<h6 class="mb-0 mt-3">
+									<a class="button_1 "
+										th:href="@{'/booking/choose-show/' + ${film.id}}"> <i
+										class="fa fa-check-circle me-1 font_14"></i> <span
+										th:text="#{btn.getTicket}">Get Ticket</span>
+									</a>
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- <script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const navbar = document.querySelector('.navbar-black');
+				window.addEventListener('scroll', function() {
+					if (window.scrollY > 50) {
+						navbar.classList.add('scrolled');
+					} else {
+						navbar.classList.remove('scrolled');
+					}
+				});
+			});
+		</script> -->
+	</article>
+</body>
+</html>

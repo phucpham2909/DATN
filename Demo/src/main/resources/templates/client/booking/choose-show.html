@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/shared/layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title th:text="${film.name} + ' - ' + #{choose.time}">Chọn suất chiếu</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body {
+    background-color: #f8f9fa;
+}
+
+.date-btn {
+    border-radius: 8px;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-weight: 500;
+    color: #333;
+    border-color: #dc3545;
+}
+
+.date-btn:hover, .date-btn.active {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.section-box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.screen-label {
+    font-weight: 600;
+    color: #dc3545;
+}
+
+.time-slot {
+    display: inline-block;
+    margin: 5px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+    font-weight: 500;
+    transition: 0.2s;
+    background-color: #fff;
+}
+
+.time-slot:hover, .time-slot.selected1 {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    animation: popup-fade 0.4s ease;
+}
+
+@keyframes popup-fade {
+    from { transform:scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+<article>
+    <div class="container my-5">
+        <div class="section-box mb-4">
+            <h2 th:text="${film.name}" class="mb-4">Tên phim</h2>
+
+            <form th:action="@{/booking/choose-seat}" method="get">
+                <input type="hidden" name="filmId" th:value="${film.id}" />
+                <input type="hidden" name="selectedDate" id="selectedDate" />
+
+                <!-- 1. Chọn ngày -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3" th:text="#{choose.date}">Chọn ngày chiếu</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-outline-dark date-btn"
+                                th:each="d : ${next7Days}"
+                                th:data-date="${#strings.substringBefore(d,';')}"
+                                th:text="${#strings.substringAfter(d,';')}"
+                                th:classappend="${#strings.substringBefore(d,';') == #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')} ? ' active' : ''">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Chọn chi nhánh -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3" th:text="#{choose.cinema}">Chọn chi nhánh</h5>
+                    <select name="cinemaId" class="form-select w-50" id="cinemaSelect">
+                        <option value="" th:text="#{choose.selectBranch}">-- Chọn chi nhánh --</option>
+                        <option th:each="c : ${cinemas}" th:value="${c.id}" th:text="${c.dress}"></option>
+                    </select>
+                </div>
+
+                <!-- 3. Chọn giờ chiếu -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold mb-3" th:text="#{choose.time}">Giờ chiếu</h5>
+                    <div class="p-3 border rounded bg-light">
+                        <div th:if="${#lists.isEmpty(showTimes)}" th:text="#{choose.noShow}">Không có suất chiếu nào!</div>
+
+                        <div th:each="room : ${rooms}" class="mb-3 room-group" th:data-cinema="${room.cinema.id}">
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <span class="badge bg-success me-3" th:text="${room.name}">Phòng 1</span>
+                                <span class="time-slot" th:each="sc : ${showTimes}"
+                                      th:if="${sc.room.id == room.id}" th:data-date="${sc.date}"
+                                      th:data-room="${room.id}" th:data-cinema="${room.cinema.id}"
+                                      th:data-value="${sc.id}" th:text="${sc.gioBatDau}"></span>
+                            </div>
+                            <hr class="my-2">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="suatChieuId" id="selectedShowTime" required>
+                </div>
+
+                <button type="submit" class="btn btn-success px-4" th:text="#{choose.continue}">Tiếp tục</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal cảnh báo -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+                <div class="modal-header border-0 bg-danger text-white">
+                    <h5 class="modal-title fw-bold" th:text="#{modal.title}">⚠️ Thông báo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <h5 class="fw-semibold text-dark mb-2" th:text="#{modal.missingInfo}">Thiếu thông tin đặt vé</h5>
+                    <p class="text-muted mb-0" th:utext="#{modal.message}">
+                        Vui lòng chọn đầy đủ <b>ngày chiếu</b>, <b>rạp</b> và <b>giờ chiếu</b> trước khi tiếp tục.
+                    </p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal" th:text="#{modal.confirm}">Đã hiểu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+  <script>
+const dateBtns = document.querySelectorAll('.date-btn');
+const selectedDateInput = document.getElementById('selectedDate');
+const cinemaSelect = document.getElementById('cinemaSelect');
+const showTimeButtons = document.querySelectorAll('.time-slot');
+const selectedShowTimeInput = document.getElementById('selectedShowTime');
+
+// Khi load trang: set ngày mặc định và ẩn tất cả phòng
+window.addEventListener('DOMContentLoaded', () => {
+    const todayBtn = document.querySelector('.date-btn.active');
+    if (todayBtn) selectedDateInput.value = todayBtn.dataset.date;
+
+    // Ẩn tất cả các phòng và suất chiếu
+    document.querySelectorAll('.room-group').forEach(group => group.style.display = 'none');
+    document.querySelectorAll('.time-slot').forEach(slot => slot.style.display = 'none');
+});
+
+// Chọn ngày
+dateBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        dateBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedDateInput.value = btn.dataset.date;
+
+        // Chỉ lọc khi đã chọn chi nhánh
+        if (cinemaSelect.value) filterShowTimes();
+    });
+});
+
+// Chọn chi nhánh
+cinemaSelect.addEventListener('change', () => {
+    filterShowTimes();
+});
+
+// Chọn suất chiếu
+showTimeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        showTimeButtons.forEach(b => b.classList.remove('selected1'));
+        btn.classList.add('selected1');
+        selectedShowTimeInput.value = btn.dataset.value;
+    });
+});
+
+// Lọc hiển thị suất chiếu
+function filterShowTimes() {
+    const selectedDate = selectedDateInput.value;
+    const selectedCinema = cinemaSelect.value;
+
+    document.querySelectorAll('.room-group').forEach(group => {
+        const cinemaId = group.dataset.cinema;
+        let visible = false;
+
+        group.querySelectorAll('.time-slot').forEach(slot => {
+            const match =
+                (!selectedDate || slot.dataset.date === selectedDate) &&
+                (!selectedCinema || slot.dataset.cinema === selectedCinema);
+
+            slot.style.display = match ? 'inline-block' : 'none';
+            if (match) visible = true;
+        });
+
+        group.style.display = visible ? 'block' : 'none';
+    });
+}
+
+// Kiểm tra submit form
+document.querySelector("form").addEventListener("submit", function (e) {
+    const suatChieuId = selectedShowTimeInput.value;
+    const cinema = cinemaSelect.value;
+    const date = selectedDateInput.value;
+
+    if (!suatChieuId || !cinema || !date) {
+        e.preventDefault();
+        const modal = new bootstrap.Modal(document.getElementById('warningModal'));
+        modal.show();
+    }
+});
+</script>
+
+
+</article>
+</body>
+</html>

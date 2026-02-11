@@ -1,0 +1,135 @@
+/*
+Template Name: Movie Theme
+File: Layout CSS
+Author: TemplatesOnWeb
+Author URI: https://www.templateonweb.com/
+Licence: <a href="https://www.templateonweb.com/license">Website Template Licence</a>
+*/
+
+/*********************center_h****************/
+.carousel-caption {
+	background-color: rgba(0, 0, 0, .4) !important;
+	bottom: 0;
+	left: 0;
+	color: #fff;
+	width: 100%;
+	height: 100%;
+	padding: 240px 140px 0px 140px;
+	text-align: left;
+}
+
+.carousel-caption h1 {
+	font-size: 70px;
+}
+/*********************center_h_end****************/
+
+/*********************join****************/
+.join_1li1 span {
+	width: 100px;
+	height: 100px;
+	line-height: 90px;
+}
+
+.join_1li img {
+	height: 150px;
+}
+/*********************join_end****************/
+
+/*********************feat****************/
+.feat_3 {
+	margin-top: 160px;
+	width: 60%;
+}
+
+.feat_2i2 ul li a {
+	display: block;
+	padding: 8px 18px;
+	background: #ffeaea;
+	transition: 0.3s;
+}
+
+.feat_2i2 ul li a:hover {
+	background: #d96c2c;
+	color: #fff;
+}
+
+.feat_2i2 {
+	width: 90%;
+	left: 5%;
+	bottom: -130px;
+}
+/*********************feat_end****************/
+.feat_2i {
+	transition: all 0.3s ease;
+}
+
+.feat_2i:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.feat_2i img {
+	border-bottom: 3px solid #f8f9fa;
+}
+
+.feat_2i h5 {
+	font-size: 1.05rem;
+	color: #222;
+}
+
+/*********************choose****************/
+.choose_1r h4 span {
+	font-size: 120px;
+}
+
+#choose {
+	background-image: url(../img/1.jpg);
+}
+/*********************choose_end****************/
+
+/*********************gallery****************/
+.gallery_2i2 {
+	padding-top: 25%;
+	display: none;
+}
+
+.gallery_2i1 img {
+	min-height: 180px;
+}
+
+.gallery_2i:hover .gallery_2i2 {
+	display: block;
+	transition: 0.3s;
+}
+
+#gallery .modal-dialog {
+	min-width: 800px;
+}
+
+#gallery .fade {
+	padding-top: 20px;
+}
+
+#gallery .modal-header .btn-close {
+	color: #ef6330 !important;
+	background: none;
+	width: auto !important;
+	opacity: 1 !important;
+	font-size: 40px;
+}
+/*********************gallery_end****************/
+
+/*********************event****************/
+.event_1ril2 h6 {
+	rotate: -90deg;
+}
+
+.event_1ril2 {
+	padding-top: 56px;
+	left: -56px;
+}
+
+.event_1rir {
+	min-height: 240px;
+	padding-top: 40px;
+}

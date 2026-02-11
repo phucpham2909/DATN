@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Danh sách Ghế</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<style>
+.seat-grid {
+	display: grid;
+	grid-template-columns: repeat(15, 40px);
+	gap: 5px;
+	justify-content: center;
+}
+
+.seat {
+	width: 40px;
+	height: 40px;
+	border-radius: 5px;
+	color: white;
+	font-weight: 600;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.seat:hover {
+	transform: scale(1.1);
+}
+
+.seat-normal {
+	background-color: #198754;
+} /* Xanh lá thường */
+.seat-vip {
+	background-color: #dc3545;
+} /* Đỏ VIP */
+.seat-broken {
+	background-color: #6c757d;
+} /* Xám hỏng */
+.row-label {
+	grid-column: span 15;
+	text-align: center;
+	margin-top: 10px;
+	font-weight: 600;
+	color: #0d6efd;
+}
+</style>
+</head>
+<body>
+	<article>
+		<div class="container mt-3 text-center">
+			<h3>🪑 Cập nhật giá hàng loạt</h3>
+			<form th:action="@{/admin/seats/update-prices}" method="post"
+				class="row g-3 mb-4 justify-content-center">
+				<input type="hidden" name="roomId" th:value="${room.id}" />
+				<div class="col-md-3 col-sm-6 d-flex">
+				Giá ghế thường: 
+					<input type="number" name="basePrice" class="form-control"
+						placeholder="Giá ghế thường">
+				</div>
+				<div class="col-md-3 col-sm-6 d-flex">
+				Hệ số nhân ghế VIP(%):
+					<input type="number" value="20" name="vipMultiplier"
+						class="form-control" placeholder="Hệ số VIP ?%">
+				</div>
+				<div class="col-md-2 col-sm-6">
+					<button class="btn btn-primary w-100" type="submit">Cập
+						nhật</button>
+				</div>
+			</form>
+			<h3 class="mb-4">
+				🪑 Danh sách Ghế - <span th:text="${room.cinema.name}">Chi
+					Nhánh</span> - <span th:text="${room.name}">Phòng</span>
+			</h3>
+
+			<div class="mb-3">
+				<a th:href="@{/admin/seats/dashboard(cinemaId=${room.cinema.id})}"
+					class="btn btn-secondary">← Quay lại</a> <a
+					th:if="${hasBrokenSeats}"
+					th:href="@{'/admin/seats/recreate/' + ${room.id}}"
+					class="btn btn-success">Tạo lại ghế</a>
+			</div>
+
+			<div class="seat-grid">
+				<div th:each="seat : ${seats}" th:if="${seat.status >= 0}"
+					th:classappend="${seat.type == 1} ? ' seat-vip' : ' seat-normal'"
+					th:title="${seat.name} + ' | 
+        ' + (seat.type == 1 ? 'VIP' : 'Thường') + ' | Tốt | ' + seat.price + 'đ'"
+					th:text="${seat.name}"
+					th:onclick="'window.location.href=\'/admin/seats/edit/' + ${seat.id} + '\''"
+					class="seat"></div>
+			</div>
+
+			<p class="mt-4">🟩 Ghế Thường | 🟥 Ghế VIP | ⬛ Ghế Hỏng</p>
+		</div>
+	</article>
+</body>
+</html>

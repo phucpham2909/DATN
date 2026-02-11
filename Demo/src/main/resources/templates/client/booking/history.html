@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/shared/layout::view(~{::title}, ~{::article})}">
+<head>
+<title>Lịch sử đặt vé</title>
+</head>
+
+<article class="container mt-4">
+
+    <h3 class="mb-4">🎬 Lịch sử đặt vé của bạn</h3>
+
+    <div th:if="${#lists.isEmpty(list)}">
+        <div class="alert alert-info">Bạn chưa có vé nào.</div>
+    </div>
+
+    <div th:each="b : ${list}" class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${b.suatChieu.detailFilm.film.name}"></h5>
+
+            <p class="mb-1">
+                <b>Ngày chiếu:</b> <span th:text="${#temporals.format(b.suatChieu.date,'dd/MM/yyyy')}"></span>
+            </p>
+
+            <p class="mb-1">
+                <b>Giờ chiếu:</b> <span th:text="${#temporals.format(b.suatChieu.gioBatDau,'HH:mm')}"></span> -
+                <span th:text="${#temporals.format(b.suatChieu.gioKetThuc,'HH:mm')}"></span>
+            </p>
+
+            <p class="mb-1">
+                <b>Rạp chiếu:</b> <span th:text="${b.suatChieu.room.cinema.name}"></span>
+            </p>
+
+            <p class="mb-1">
+                <b>Phòng chiếu:</b> <span th:text="${b.suatChieu.room.name}"></span>
+            </p>
+
+            <p class="mb-1">
+                <b>Ghế:</b>
+                <span th:each="ve : ${veMap[b.id]}" class="badge bg-primary me-1" th:text="${ve.seats.name}"></span>
+            </p>
+
+            <p th:if="${!comboMap[b.id].isEmpty()}">
+                <b>Combo:</b>
+                <span th:each="c : ${comboMap[b.id]}">
+                    <span class="badge bg-warning text-dark me-1" th:text="${c.product.name + ' x' + c.quantity}"></span>
+                </span>
+            </p>
+
+            <h5 class="text-danger mt-2">
+                Tổng tiền: <span th:text="${#numbers.formatDecimal(b.sum,0,'POINT',0,'COMMA')} + ' VND'"></span>
+            </h5>
+
+            <span class="badge bg-success">✔ Đã thanh toán</span>
+
+        </div>
+    </div>
+
+</article>
+
+</html>

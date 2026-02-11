@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>BGV Cinema</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/global.css" rel="stylesheet">
+<link href="css/index.css" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Platypi:ital,wght@0,300..800;1,300..800&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+	rel="stylesheet">
+
+<style>
+.navbar-black {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: rgba(0, 0, 0, 1);
+	z-index: 9999;
+	transition: background-color 0.4s ease, box-shadow 0.3s ease,
+		backdrop-filter 0.3s ease;
+}
+
+.navbar-black.scrolled {
+	background: rgba(0, 0, 0, 0.7);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(8px);
+}
+
+.navbar-black .nav-link {
+	color: white !important;
+	font-weight: 500;
+	padding: 18px 15px;
+	text-transform: uppercase;
+	transition: color 0.3s ease, padding 0.3s ease;
+}
+
+.navbar-black.scrolled .nav-link {
+	padding-top: 14px;
+	padding-bottom: 14px;
+}
+
+.navbar-black .nav-link:hover {
+	color: #dc3545 !important;
+}
+
+.navbar-toggler {
+	border-color: white;
+}
+
+.navbar-toggler-icon {
+	background-color: white;
+	border-radius: 3px;
+	width: 20px;
+	height: 2px;
+	display: block;
+	margin: 4px auto;
+}
+</style>
+</head>
+<body style="margin: 0; padding: 0;">
+	<nav class="navbar navbar-expand-md navbar-black fixed-top"
+		id="navbar_sticky">
+		<div class="container">
+			<!-- Logo -->
+			<a class="navbar-brand me-3" href="/"> <img
+				class="rounded-circle" src="/images/Logo_BGV.jpg" alt="Logo"
+				height="55">
+			</a>
+
+			<!-- Toggle button cho mobile -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+				aria-controls="mainNavbar" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Menu chính -->
+			<div class="collapse navbar-collapse" id="mainNavbar">
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" href="/booking/films">MUA
+							VÉ</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="/film/nowShowing">PHIM ĐANG CHIẾU</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="/film/comingSoon">PHIM SẮP CHIẾU</a></li>
+					<li class="nav-item"><a class="nav-link" href="/products">COMBO</a></li>
+					<li class="nav-item" sec:authorize="isAuthenticated()"><a
+						class="nav-link" href="/booking/history">Lịch sử đặt vé</a></li>
+				</ul>
+			</div>
+
+			<!-- User / Admin / Ngôn ngữ -->
+			<div class="d-flex ms-auto align-items-center">
+				<!-- Chưa đăng nhập -->
+				<span sec:authorize="isAnonymous()"> <a href="/login/form"
+					class="text-white text-decoration-none me-3">ĐĂNG NHẬP</a> <a
+					href="/register/form" class="text-white text-decoration-none me-3">ĐĂNG
+						KÝ</a>
+				</span>
+
+				<!-- Đã đăng nhập -->
+				<span sec:authorize="isAuthenticated()"
+					class="d-flex align-items-center"> <a
+					href="/account/avatar-detail"
+					class="d-flex align-items-center text-decoration-none me-2"> <img
+						th:src="@{${#authentication.principal.account.gender} == 'MALE' ? '/images/avatar-male.png' : '/images/avatar-female.png'}"
+						alt="avatar" class="rounded-circle" width="32" height="32">
+				</a> <span class="text-white me-3"> <b
+						sec:authentication="principal.account.fullname"></b>
+				</span> <a href="/logout" class="text-white text-decoration-none me-3">ĐĂNG
+						XUẤT</a>
+				</span>
+
+				<!-- Admin menu -->
+				<span sec:authorize="hasRole('ADMIN')"> <a
+					href="/admin/index" class="text-white text-decoration-none me-3">Dashboard</a>
+				</span>
+
+				<!-- Ngôn ngữ -->
+				<ul class="navbar-nav mb-2 mb-lg-0">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle text-white" href="#"
+						id="langDropdown" role="button" data-bs-toggle="dropdown"
+						aria-expanded="false"> Ngôn ngữ </a>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="langDropdown">
+							<li><a class="dropdown-item" href="?lang=vi">Tiếng Việt</a></li>
+							<li><a class="dropdown-item" href="?lang=en">English</a></li>
+						</ul></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Script navbar scroll effect -->
+	<script>
+		window.addEventListener('scroll', function() {
+			const navbar = document.querySelector('.navbar-black');
+			if (window.scrollY > 50) {
+				navbar.classList.add('scrolled');
+			} else {
+				navbar.classList.remove('scrolled');
+			}
+		});
+	</script>
+
+	<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

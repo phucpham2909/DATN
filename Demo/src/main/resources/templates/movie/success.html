@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout2 :: layout(~{::head}, ~{::body})}">
+<body>
+  <div class="container text-center" id="ticket-container">
+    <h3 class="fw-bold text-success mt-3">🎉 Thanh toán thành công!</h3>
+    <p class="text-muted">Vé của bạn đã được xác nhận, hãy lưu lại mã vé bên dưới.</p>
+  </div>
+
+  <script>
+    async function loadTicket() {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get("movieId");
+      const seats = params.get("seats");
+
+      if (!movieId || !seats) {
+        document.getElementById("ticket-container").innerHTML = "<p class='text-danger'>Thiếu thông tin vé!</p>";
+        return;
+      }
+
+      const res = await fetch(`/api/booking/success?movieId=${movieId}&seats=${seats}`);
+      const ticket = await res.json();
+
+      const seatList = ticket.seats.join(", ");
+
+      document.getElementById("ticket-container").innerHTML += `
+        <div class="card mx-auto mt-4 shadow" style="max-width: 500px;">
+          <div class="card-body">
+            <h5 class="card-title mb-3">🎫 Mã vé: <strong>${ticket.ticketId}</strong></h5>
+            <img src="${ticket.movie.image}" class="img-fluid rounded mb-3" alt="${ticket.movie.title}">
+            <h5>${ticket.movie.title}</h5>
+            <p><strong>Rạp:</strong> ${ticket.cinema}</p>
+            <p><strong>Suất chiếu:</strong> ${ticket.showtime}</p>
+            <p><strong>Ghế:</strong> ${seatList}</p>
+            <p><strong>Thời gian đặt:</strong> ${ticket.bookingTime}</p>
+            <p class="text-success fw-bold">${ticket.status}</p>
+            <hr>
+            <button class="btn btn-outline-primary" onclick="window.print()">🖨 In vé</button>
+            <a href="/home" class="btn btn-success">Về trang chủ</a>
+          </div>
+        </div>
+      `;
+    }
+
+    loadTicket();
+  </script>
+</body>
+</html>

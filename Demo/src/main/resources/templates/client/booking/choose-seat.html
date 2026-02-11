@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
+	th:replace="~{/shared/layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Chọn ghế</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+</head>
+
+<body>
+	<article>
+		<div class="container mt-1 text-center">
+			<div th:if="${error}" class="alert alert-danger mt-3"
+				th:text="${error}"></div>
+			<h3 class="mb-3">Đặt vé suất chiếu</h3>
+			<form th:action="@{/booking/confirm}" method="post" class="mt-2"
+				id="bookingForm">
+				<input type="hidden" name="suatChieuId" th:value="${suatChieu.id}" />
+				<input type="hidden" name="accountId" th:value="${accountId}"
+					id="currentAccountId" />
+				<div class="seat-grid">
+					<div th:each="seat : ${seats}" th:id="'seat-' + ${seat.id}"
+						th:data-seat-id="${seat.id}" th:data-price="${seat.price}"
+						th:classappend="${seat.status == -1} ? ' seat-broken' : (${seat.booked} ? ' seat-booked' : (${seat.type == 1} ? ' seat-vip' : ' seat-normal'))"
+						th:text="${seat.name}" class="seat" th:data-type="${seat.type}"></div>
+				</div>
+				<p class="mt-2 mb-2">
+					<span class="fas fa-square" style="color: #198754;">&nbsp;&nbsp;</span>
+					Ghế Thường &nbsp;&nbsp; <span class="fas fa-square"
+						style="color: #dc3545;">&nbsp;&nbsp;</span> Ghế VIP &nbsp;&nbsp; <span
+						class="fas fa-square" style="color: #333;">&nbsp;&nbsp;</span> Ghế
+					Đã đặt &nbsp;&nbsp; <span class="fas fa-square"
+						style="color: #6c757d;">&nbsp;&nbsp;</span> Ghế Đang có người chọn
+					&nbsp;&nbsp; <span class="fas fa-square" style="color: #f8b500;">&nbsp;&nbsp;</span>
+					Ghế Đang chọn
+				</p>
+				<div class="card mb-3 shadow-sm border-0">
+					<div class="row g-0 align-items-center">
+						<div class="col-md-4">
+							<img th:if="${film.avatar != null}" th:src="@{${film.avatar}}"
+								th:alt="${film.name}" class="img-fluid"
+								style="height: 150px; width: 100px; object-fit: cover;">
+						</div>
+						<div class="col-md-4">
+							<div class="card-body">
+								<h4 class="card-title mb-2 fw-bold text-dark"
+									th:text="${suatChieu.detailFilm.film.name}">Tên phim</h4>
+								<p class="card-text mb-1">
+									<strong>Ngày:</strong> <span
+										th:text="${#temporals.format(suatChieu.date,'EEE dd/MM/yyyy')}">01/01/2025</span>
+								</p>
+								<p class="card-text mb-1">
+									<strong>Giờ:</strong> <span
+										th:text="${#temporals.format(suatChieu.gioBatDau,'HH:mm')}">10:00</span>
+									- <span
+										th:text="${#temporals.format(suatChieu.gioKetThuc,'HH:mm')}">12:00</span>
+								</p>
+								<p class="card-text mb-0">
+									<strong>Phòng:</strong> <span th:text="${suatChieu.room.name}">Room
+										1</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div id="summary" class="mt-1 fw-bold fs-5 text-dark">Đã
+								chọn 0 ghế — Tổng: 0₫</div>
+							<button type="submit" class="btn btn-success mt-3 px-4 mb-1">Xác
+								nhận</button>
+							<a class="btn btn-dark mt-3 px-4 mb-2" th:href="@{/products}">Mua
+								thêm Combo</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!-- MODAL CẢNH BÁO -->
+		<div class="modal fade" id="seatWarningModal" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content text-center">
+					<div class="modal-header">
+						<h5 class="modal-title text-danger fw-bold">Thông báo</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+					<div class="modal-body fs-5">🎟️ Vui lòng chọn ghế trước khi
+						tiếp tục!</div>
+					<div class="modal-footer justify-content-center">
+						<button type="button" class="btn btn-success px-4"
+							data-bs-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+		<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    const seats = document.querySelectorAll('.seat');
+    const form = document.getElementById('bookingForm');
+    const summary = document.getElementById('summary');
+    const currentAccountId = /*[[${accountId}]]*/ 0;
+    const suatChieuId = /*[[${suatChieu.id}]]*/ 0;
+    const modal = new bootstrap.Modal(document.getElementById('seatWarningModal'));
+
+    function formatCurrency(amount) { return amount.toLocaleString('vi-VN') + '₫'; }
+
+    function updateSummary() {
+        const selectedSeats = document.querySelectorAll('.seat.selected');
+        let total = 0;
+        selectedSeats.forEach(seat => total += parseInt(seat.dataset.price || 0));
+        summary.textContent = `Đã chọn ${selectedSeats.length} ghế — Tổng: ${formatCurrency(total)}`;
+    }
+
+    function getSelectedCount() { return document.querySelectorAll('.seat.selected').length; }
+
+    function validateSeat(e) {
+        if (getSelectedCount() === 0) {
+            e.preventDefault();
+            modal.show();
+        }
+    }
+
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({}, function () {
+        stompClient.subscribe('/topic/seat-status/' + suatChieuId, function (message) {
+            const data = JSON.parse(message.body);
+            const seatEl = document.getElementById('seat-' + data.seatId);
+            if (!seatEl) return;
+
+            switch(data.action) {
+                case 'booked':
+                    seatEl.className = 'seat seat-booked';
+                    removeHiddenInput(data.seatId);
+                    break;
+                case 'hold':
+                    if (data.accountId != currentAccountId) {
+                        seatEl.classList.add('held-by-others');
+                        seatEl.classList.remove('selected');
+                        removeHiddenInput(data.seatId);
+                    } else {
+                        seatEl.classList.add('selected');
+                        seatEl.classList.remove('held-by-others');
+                    }
+                    break;
+                case 'release':
+                    seatEl.classList.remove('held-by-others');
+                    if (data.accountId == currentAccountId) {
+                        seatEl.classList.remove('selected');
+                        removeHiddenInput(data.seatId);
+                    }
+                    break;
+                case 'out_of_service':
+                    seatEl.className = 'seat seat-broken';
+                    removeHiddenInput(data.seatId);
+                    break;
+                case 'restored':
+                    const seatType = seatEl.dataset.type;
+                    seatEl.className = 'seat ' + (seatType==='1' ? 'seat-vip' : 'seat-normal');
+                    break;
+            }
+            updateSummary();
+        });
+    });
+
+    function removeHiddenInput(seatId) {
+        const input = form.querySelector(`input[name="seatIds"][value="${seatId}"]`);
+        if (input) input.remove();
+    }
+    seats.forEach(seat => {
+        if (seat.classList.contains('seat-booked') || seat.classList.contains('seat-broken')) return;
+
+        seat.addEventListener('click', function () {
+            const seatId = seat.dataset.seatId;
+            const input = form.querySelector(`input[name="seatIds"][value="${seatId}"]`);
+
+            if (seat.classList.contains('held-by-others')) {
+                alert("Ghế hiện đang được chọn bởi người khác!");
+                return;
+            }
+
+            if (input) {
+                fetch(`/api/booking/release-seat?seatId=${seatId}&suatChieuId=${suatChieuId}`, { method: 'POST' });
+                removeHiddenInput(seatId);
+                seat.classList.remove('selected');
+            } else {
+                // Hold ghế
+                fetch(`/api/booking/hold-seat?seatId=${seatId}&suatChieuId=${suatChieuId}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'seatIds';
+                        hiddenInput.value = seatId;
+                        form.appendChild(hiddenInput);
+                        seat.classList.add('selected');
+                    } else {
+                        alert(data.message);
+                        seat.classList.add('held-by-others');
+                    }
+                    updateSummary();
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-success, .btn-secondary').forEach(btn => btn.addEventListener('click', validateSeat));
+
+    updateSummary();
+});
+</script>
+
+
+	</article>
+</body>
+</html>

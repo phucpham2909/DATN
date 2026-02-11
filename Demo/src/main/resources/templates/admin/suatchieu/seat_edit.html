@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Chỉnh sửa ghế</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body class="bg-light">
+	<article>
+		<div class="container py-5">
+			<h2 class="text-center mb-4 text-dark">✏️ Chỉnh sửa Ghế</h2>
+
+			<form th:action="@{/admin/seats/edit}" th:object="${seat}"
+				method="post" class="w-50 mx-auto">
+				<!-- Hidden để giữ id và room -->
+				<input type="hidden" th:field="*{id}" /> <input type="hidden"
+					th:field="*{room.id}" />
+
+				<!-- Name ghế -->
+				<div class="mb-3">
+					<label class="form-label">Tên ghế</label> <input type="text"
+						th:field="*{name}" class="form-control" required readonly /> <small
+						class="text-muted">Tên ghế không thể thay đổi</small>
+				</div>
+
+				<!-- Loại ghế -->
+				<div class="mb-3">
+					<label class="form-label">Loại ghế</label> <select
+						th:field="*{type}" class="form-select" required>
+						<option value="0" th:selected="${seat.type == 0}">Thường</option>
+						<option value="1" th:selected="${seat.type == 1}">VIP</option>
+					</select>
+				</div>
+
+				<!-- Giá -->
+				<div class="mb-3">
+					<label class="form-label">Giá (VND)</label> <input type="number"
+						th:field="*{price}" class="form-control" required min="0" />
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Trạng thái</label> <select
+						th:field="*{status}" class="form-select" required>
+						<option value="-1" th:selected="*{status == -1}">Ghế hỏng</option>
+						<option value="0" th:selected="*{status == 0}">Đang hoạt
+							động</option>
+					</select>
+				</div>
+
+				<div class="d-flex justify-content-between">
+					<a th:href="@{/admin/seats/room/{id}(id=${seat.room.id})}"
+						class="btn btn-secondary">⬅ Quay lại</a>
+					<button type="submit" class="btn btn-primary">💾 Lưu thay
+						đổi</button>
+					<a th:href="@{/admin/seats/delete/{id}(id=${seat.id})}"
+						class="btn btn-danger ms-2"
+						onclick="return confirm('Bạn có chắc muốn xóa ghế này không?');">
+						Xóa ghế </a>
+				</div>
+			</form>
+		</div>
+	</article>
+</body>
+</html>

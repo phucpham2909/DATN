@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout2 :: layout(~{::head}, ~{::body})}">
+<body>
+  <div class="container">
+    <h3 class="fw-bold text-center mb-3">🎟️ Chọn ghế xem phim</h3>
+
+    <div class="text-center mb-3">
+      <span class="badge bg-warning text-dark me-2">💺 Có sẵn</span>
+      <span class="badge bg-secondary me-2">❌ Đã đặt</span>
+      <span class="badge bg-danger">🎯 Bạn chọn</span>
+    </div>
+
+    <div id="seat-container" class="d-flex flex-column align-items-center"></div>
+
+    <div class="mt-4 text-center">
+      <h5>Tổng tiền: <span id="total-price" class="text-danger fw-bold">0</span> K</h5>
+      <button class="btn btn-success mt-2" onclick="confirmBooking()">Xác nhận đặt vé</button>
+    </div>
+  </div>
+
+  <style>
+    .seat-row { display: flex; align-items: center; margin: 6px 0; }
+    .seat-label { width: 30px; text-align: right; margin-right: 10px; font-weight: bold; }
+    .seat {
+      width: 30px; height: 30px; margin: 3px;
+      border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.2s;
+    }
+    .available { background-color: #ffc107; color: #000; }
+    .booked { background-color: #aaa; color: #fff; cursor: not-allowed; }
+    .selected { background-color: #dc3545; color: #fff; }
+    .screen { width: 80%; height: 20px; background: #333; color: white; text-align: center; margin: 20px auto; }
+  </style>
+
+  <script>
+    let selectedSeats = [];
+    let seatData = [];
+
+    async function loadSeats() {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get("movieId") || 1;
+      const res = await fetch(`/api/booking/seats?movieId=${movieId}`);
+      seatData = await res.json();
+
+      const container = document.getElementById("seat-container");
+      container.innerHTML = `<div class="screen mb-3">MÀN HÌNH</div>` +
+        seatData.map(row => `
+          <div class="seat-row">
+            <div class="seat-label">${row.rowLabel}</div>
+            ${row.seats.map(s => `
+              <div class="seat ${s.booked ? 'booked' : 'available'}"
+                   data-id="${s.id}"
+                   data-price="${s.price}"
+                   onclick="toggleSeat('${s.id}', ${s.booked}, ${s.price})">
+                ${s.id.replace(/[A-Z]/g,'')}
+              </div>`).join('')}
+          </div>
+        `).join('');
+    }
+
+    function toggleSeat(id, booked, price) {
+      if (booked) return;
+      const seat = document.querySelector(`[data-id="${id}"]`);
+      const index = selectedSeats.findIndex(s => s.id === id);
+
+      if (index === -1) {
+        selectedSeats.push({ id, price });
+        seat.classList.add("selected");
+      } else {
+        selectedSeats.splice(index, 1);
+        seat.classList.remove("selected");
+      }
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const total = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+      document.getElementById("total-price").textContent = total;
+    }
+
+    function confirmBooking() {
+      if (selectedSeats.length === 0) {
+        alert("Bạn chưa chọn ghế!");
+        return;
+      }
+      const seatNames = selectedSeats.map(s => s.id).join(", ");
+      alert(`Đặt vé thành công!\nGhế: ${seatNames}\nTổng: ${selectedSeats.reduce((s, x) => s + x.price, 0)}K`);
+      // Có thể gửi POST /api/booking/confirm ở đây
+    }
+
+    loadSeats();
+  </script>
+</body>
+</html>

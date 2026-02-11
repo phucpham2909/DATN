@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+	<meta charset="UTF-8">
+	<title>Sửa phim</title>
+</head>
+<body>
+<article>
+	<div class="mt-3">
+		<h3 class="mb-3 mt-3">Sửa phim</h3>
+		<div class="card-body">
+			<form class="row" th:object="${film}"
+				  th:action="@{/admin/film/edit}"
+				  method="post"
+				  enctype="multipart/form-data">
+
+				<input type="hidden" th:field="*{id}">
+
+				<div class="col-lg-6">
+					<div class="mb-3">
+						<label class="form-label">Tên phim</label>
+						<input type="text" class="form-control" th:field="*{name}">
+						 <i
+							th:if="${#fields.hasErrors('name')}"
+							th:text="${#fields.errors('name')[0]}" class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Đạo diễn</label>
+						<input type="text" class="form-control" th:field="*{detailFilm.daoDien}">
+						<i
+							th:if="${#fields.hasErrors('detailFilm.daoDien')}"
+							th:text="${#fields.errors('detailFilm.daoDien')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Diễn viên</label>
+						<input type="text" class="form-control" th:field="*{detailFilm.dienVien}">
+						<i
+							th:if="${#fields.hasErrors('detailFilm.dienVien')}"
+							th:text="${#fields.errors('detailFilm.dienVien')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Thể loại</label>
+						<select id="categorySelect" th:field="*{categoryIds}" multiple>
+							<option th:each="category : ${allCategories}"
+									th:value="${category.id}" th:text="${category.name}"
+									th:selected="${film.categoryIds.contains(category.id)}"></option>
+						</select><i th:if="${#fields.hasErrors('categoryIds')}"
+							th:text="${#fields.errors('categoryIds')[0]}" class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Ngày chiếu</label>
+						<input type="date" class="form-control" th:field="*{detailFilm.date}">
+						 <i th:errors="*{detailFilm.date}" class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Thời lượng (phút)</label>
+						<input type="number" class="form-control" th:field="*{detailFilm.thoiLuong}"><i th:if="${#fields.hasErrors('detailFilm.thoiLuong')}"
+							th:text="${#fields.errors('detailFilm.thoiLuong')[0]}"
+							class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Ngôn ngữ</label>
+						<input type="text" class="form-control" th:field="*{detailFilm.ngonNgu}">
+					</div>
+
+					<button type="submit" class="btn btn-primary">Cập nhật</button>
+					<a th:href="@{/admin/film/list}" class="btn btn-secondary text-center">Quay lại</a>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="mb-3">
+						<label class="form-label">Rated</label>
+						<input type="text" class="form-control" th:field="*{detailFilm.rate}">
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Trailer</label>
+						<input type="text" class="form-control" th:field="*{trailer}"><i
+							th:if="${#fields.hasErrors('trailer')}"
+							th:text="${#fields.errors('trailer')[0]}" class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Ảnh</label>
+						<input type="file" class="form-control" name="photo" accept="image/*">
+						<div class="mt-2" th:if="${film.avatar != null}">
+							<img th:src="@{'/film-images/' + ${film.avatar}}"
+								 alt="Ảnh hiện tại" class="rounded" width="150">
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Trạng thái</label><br>
+						<input type="radio" th:field="*{status}" value="1"> Đang chiếu
+						<input type="radio" th:field="*{status}" value="2" class="ms-3"> Sắp chiếu
+						<input type="radio" th:field="*{status}" value="3" class="ms-3"> Ngừng chiếu
+						<i
+							th:if="${#fields.hasErrors('status')}"
+							th:text="${#fields.errors('status')[0]}" class="text-danger"></i>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Loại phim</label><br>
+						<input type="radio" th:field="*{type}" value="1"> Phim chiếu rạp
+						<input type="radio" th:field="*{type}" value="0" class="ms-3"> Phim khác
+						<i th:if="${#fields.hasErrors('type')}"
+							th:text="${#fields.errors('type')[0]}" class="text-danger"></i>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			new Choices('#categorySelect', {
+				removeItemButton: true,
+				searchEnabled: true,
+				searchPlaceholderValue: 'Tìm kiếm thể loại...',
+				noResultsText: 'Không tìm thấy kết quả'
+			});
+		});
+	</script>
+</article>
+</body>
+</html>

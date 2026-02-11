@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/sidebar-layout::view(~{::title}, ~{::article})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Doanh Thu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+	<article>
+	<div class="container mt-4">
+    <h2 class="mb-4">📊 Báo cáo doanh thu</h2>
+
+    <!-- Form lọc theo tuần -->
+	    <form th:action="@{/admin/dashboard/ve/filter}" method="get" class="row g-3 mb-4">
+        <div class="col-auto">
+            <label for="start" class="form-label">Ngày bắt đầu</label>
+            <input type="date" id="start" name="start" th:value="${start}" class="form-control"/>
+        </div>
+        <div class="col-auto">
+            <label for="end" class="form-label">Ngày kết thúc</label>
+            <input type="date" id="end" name="end" th:value="${end}" class="form-control"/>
+        </div>
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-success">Lọc</button>
+        </div>
+    </form>
+
+
+
+	<!-- Bảng doanh thu vé -->
+   <!-- Tổng tiền -->
+<div class="alert alert-info">
+    <strong>Tổng tiền vé:</strong> <span th:text=" ${#numbers.formatDecimal(tongTienVe, 1, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span> 
+</div>
+
+<!-- Bảng doanh thu vé -->
+<h4>Doanh thu vé</h4>
+	<table class="table table-bordered table-striped">
+		<thead class="table-dark">
+			<tr>
+				<th>STT</th>
+				<th>Ngày</th>
+				<th>Số lượng vé</th>
+				<th>Tổng tiền vé</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="b, stat  : ${doanhThuVe}">
+				<td th:text="${stat.index + 1}"></td>
+				<td th:text="${#dates.format(b.date, 'dd/MM/yyyy')}"></td>
+				<td th:text="${b.ve.size()}"></td>
+				<td th:text=" ${#numbers.formatDecimal(b.sum, 1, 'POINT', 0, 'COMMA')} + ' VNĐ'"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	</div>
+	<nav class="mt-3" th:if="${pageData.totalPages > 0}">
+    <ul class="pagination justify-content-center">
+
+        <!-- Trang đầu -->
+        <li class="page-item" th:classappend="${pageData.first} ? 'disabled'">
+            <a class="page-link" th:href="@{|?page=0|}">Trang đầu</a>
+        </li>
+
+        <!-- Trang trước -->
+        <li class="page-item" th:classappend="${pageData.first} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{|?page=${pageData.number - 1}|}">
+                Trang trước
+            </a>
+        </li>
+
+        <!-- Hiển thị số trang -->
+        <li class="page-item disabled">
+            <span class="page-link">
+                Trang [[${pageData.number + 1}]] / [[${pageData.totalPages}]]
+            </span>
+        </li>
+
+        <!-- Trang kế -->
+        <li class="page-item" th:classappend="${pageData.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{|?page=${pageData.number + 1}|}">
+                Trang kế
+            </a>
+        </li>
+
+        <!-- Trang cuối -->
+        <li class="page-item" th:classappend="${pageData.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{|?page=${pageData.totalPages - 1}|}">
+                Trang cuối
+            </a>
+        </li>
+
+    </ul>
+</nav>
+	</article>
+
+	
+</body>
+</html>

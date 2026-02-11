@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/home-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Chỉnh sửa phim</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<article>
+		<div class="container">
+			<div class="col-8 offset-2 p-3">
+				<h1 class="text-primary text-center mb-4">Chỉnh sửa phim</h1>
+
+				<div th:if="${errorMessage}" class="alert alert-danger"
+					th:text="${errorMessage}"></div>
+				<div th:if="${message}" class="alert alert-success"
+					th:text="${message}"></div>
+
+				<form class="border p-4 rounded bg-light"
+					th:action="@{/admin/films/edit}" method="post"
+					enctype="multipart/form-data" th:object="${film}">
+
+					<!-- Hidden ID -->
+					<input type="hidden" th:field="*{id}" />
+
+					<!-- Tên phim -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Tên phim <span
+							class="text-danger">*</span></label> <input th:field="*{name}"
+							type="text" class="form-control"
+							th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+							placeholder="Tên phim">
+						<div class="invalid-feedback" th:errors="*{name}"></div>
+					</div>
+
+					<!-- Đạo diễn -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Đạo diễn <span
+							class="text-danger">*</span></label> <input
+							th:value="${detailFilms?.daoDien}" name="daoDien" type="text"
+							class="form-control" placeholder="Đạo diễn">
+					</div>
+
+					<!-- Diễn viên -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Diễn viên <span
+							class="text-danger">*</span></label> <input
+							th:value="${detailFilms?.dienVien}" name="dienVien" type="text"
+							class="form-control" placeholder="Diễn viên">
+					</div>
+
+					<!-- Thể loại -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Thể loại <span
+							class="text-danger">*</span></label><br>
+						<div th:each="cat : ${categories}"
+							class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox"
+								name="categoryIds" th:value="${cat.id}"
+								th:id="'cat' + ${cat.id}"
+								th:checked="${selectedCategories != null && selectedCategories.contains(cat.id)}">
+							<label class="form-check-label" th:for="'cat' + ${cat.id}"
+								th:text="${cat.name}"></label>
+						</div>
+						<div class="text-danger small" th:if="${categoryError}"
+							th:text="${categoryError}"></div>
+					</div>
+
+					<!-- Ngày chiếu -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Ngày chiếu</label> <input
+							th:value="${#temporals.format(detailFilms?.date, 'dd/MM/yyyy')}"
+							name="date" type="text" class="form-control"
+							placeholder="dd/MM/yyyy">
+					</div>
+
+					<!-- Thời lượng -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Thời lượng (phút)</label> <input
+							th:value="${detailFilms?.thoiLuong}" name="thoiLuong"
+							type="number" class="form-control"
+							placeholder="Phim dài bao nhiêu phút">
+					</div>
+
+					<!-- Ngôn ngữ -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Ngôn ngữ</label> <input
+							th:value="${detailFilms?.ngonNgu}" name="ngonNgu" type="text"
+							class="form-control"
+							placeholder="Phụ đề, thuyết minh, lồng tiếng...">
+					</div>
+
+					<!-- Rated -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Rated</label> <input
+							th:value="${detailFilms?.rate}" name="rate" type="text"
+							class="form-control" placeholder="T13, T16, T18, P...">
+					</div>
+
+					<!-- Hình ảnh -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Hình ảnh</label> <input name="photo"
+							type="file" class="form-control" accept="image/*"> <small
+							class="text-muted">Chấp nhận file ảnh, tối đa 5MB</small>
+						<div class="mt-2">
+							<img th:if="${film.avatar}"
+								th:src="@{'/images/films/' + ${film.avatar}}"
+								style="width: 120px; height: 120px; object-fit: cover;"
+								class="rounded shadow-sm">
+						</div>
+					</div>
+
+					<!-- Trailer -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Trailer</label> <input
+							th:field="*{trailer}" type="text" class="form-control"
+							placeholder="Dán link trailer phim vào đây">
+						<div class="invalid-feedback" th:errors="*{trailer}"></div>
+					</div>
+
+					<!-- Trạng thái -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Trạng thái</label><br> <input
+							type="radio" name="status" value="1" id="status1"
+							th:checked="${film.status == true}"> <label for="status1">Hiển
+							thị</label> <input type="radio" name="status" value="0" id="status2"
+							class="ms-5" th:checked="${film.status == false}"> <label
+							for="status2">Ẩn</label>
+					</div>
+
+					<!-- Loại phim -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Loại phim</label><br> <input
+							type="radio" name="type" value="1" id="type1"
+							th:checked="${film.type == true}"> <label for="type1">Phim
+							chiếu rạp</label> <input type="radio" name="type" value="0" id="type2"
+							class="ms-5" th:checked="${film.type == false}"> <label
+							for="type2">Phim khác</label>
+					</div>
+
+					<!-- Buttons -->
+					<div class="text-center">
+						<button type="submit" class="btn btn-primary px-4">Cập
+							nhật phim</button>
+						<a th:href="@{/admin/films/list}"
+							class="btn btn-secondary ms-2 px-4">Quay lại</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</article>
+</body>
+</html>

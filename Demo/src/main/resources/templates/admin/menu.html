@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand ms-1" th:href="@{/admin/index}"> <img
+			src="/images/Logo_BGV.jpg" alt="Logo" class="rounded-circle"
+			height="50px">
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item"><a class="nav-link active"
+					aria-current="page"th:text="#{amenu.cate}" th:href="@{/admin/categories}">Quản lý thể
+						loại</a></li>
+				<li class="nav-item"><a class="nav-link"th:text="#{amenu.movies}"
+					th:href="@{/admin/film/list}">Quản lý phim</a></li>
+				<li class="nav-item"><a class="nav-link"th:text="#{amenu.acc}"
+					th:href="@{/admin/account-manager}">Quản lý tài khoản</a></li>
+				<li class="nav-item"><a class="nav-link"th:text="#{amenu.showtime}"
+					th:href="@{/admin/cinema/list}">Suất chiếu</a></li>
+
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"th:text="#{umenu.account}"
+					role="button" data-bs-toggle="dropdown" aria-expanded="false">Tài
+						khoản</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item"th:text="#{umenu.logout}" href="/logout">Đăng xuất</a></li>
+						<li><a class="dropdown-item"th:text="#{umenu.change}" href="/change-password">Đổi
+								mật khẩu</a></li>
+					</ul></li>
+			</ul>
+		</div>
+
+		<ul class="navbar-nav mb-2 mb-lg-0">
+			<li class="nav-item dropdown"><a
+				class="nav-link dropdown-toggle" href="#" role="button"
+				data-bs-toggle="dropdown" aria-expanded="false"th:text="#{umenu.lang}">Ngôn ngữ</a>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li><a class="dropdown-item"th:text="#{umenu.vietnam}" href="?lang=vi">Tiếng Việt</a></li>
+					<li><a class="dropdown-item"th:text="#{umenu.english}" href="?lang=en">English</a></li>
+				</ul></li>
+		</ul>
+	</div>
+</nav>

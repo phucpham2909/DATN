@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html
+	th:replace="~{/admin/layout/home-layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Video</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+	<article>
+		<div class="container">
+			<div class="col-6 offset-3 p-3 text-center">
+			<h1 class="text-primary" th:text="${video.video_id == 0 ? 'Thêm phim mới' : 'Sửa thông tin phim'}"></h1>
+				<form class="border p-4 rounded bg-light"
+					th:action="@{${action}}" method="post" th:object="${video}"
+					enctype="multipart/form-data">
+					<div class="mb-3 text-start">
+						<label class="form-label">Tên phim</label> <input
+							name="video_name" type="text" class="form-control"
+							placeholder="Tên phim">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Đạo diễn</label> <input name="director"
+							type="text" class="form-control" placeholder="Đạo diễn">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Diễn viên</label> <input name="actor"
+							type="text" class="form-control" placeholder="Diễn viên">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Thể loại</label> <input name="category"
+							type="text" class="form-control" placeholder="Thêm thể loại">
+					</div>
+					<!-- <div class="mb-3 text-start">
+						<label class="form-label">Thể loại</label> <select name="category"
+							class="form-select" th:field="*{category}">
+							<option th:value="-1" disabled>--------Chọn thể
+								loại-------</option>
+							<option th:each="item : ${categories}"
+								th:value="${item.category_id}" th:text="${item.name}"
+								th:selected="${video.category == item.category_id}"></option>
+						</select>
+						 <i class="text-danger" th:if="${video?.errors?.errCat != null}"
+							th:text="${video.errors.errCat}"></i>
+					</div> -->
+					<div class="mb-3 text-start">
+						<label class="form-label">Ngày chiếu</label> <input name="date"
+							class="form-control" placeholder="Ngày khởi chiếu">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Thời lượng</label> <input
+							name="duration" class="form-control"
+							placeholder="Phim dài ? phút">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Ngôn ngữ</label> <input name="language"
+							class="form-control"
+							placeholder="Phụ đề, thuyết minh, lồng tiếng bằng ngôn ngữ?">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Rated</label> <input name="rated"
+							class="form-control" placeholder="Điều kiện? Độ tuổi">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Hình ảnh</label> <input
+							th:field="*{photo}" type="hidden"> <input name="photo"
+							type="file" placeholder="Hình ảnh minh họa cho phim">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Trailer</label> <input
+							th:field="*{trailer}" type="text" class="form-control"
+							placeholder="Dán link trailer phim vào đây">
+					</div>
+					<div class="mb-3 text-start">
+						<label class="form-label">Trạng thái</label><br> 
+							<input id="1" type="radio" checked="checked" name="trangThai">Đang chiếu
+							<input id="2" type="radio" name="trangThai" class="ms-5">Sắp chiếu
+							<input id="3" type="radio" name="trangThai" class="ms-5">Ngừng chiếu
+					</div>
+					<div class="">
+						<button type="submit" class="btn btn-primary"
+							th:text="${video.video_id == 0 ? 'Thêm' : 'Sửa'}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</article>
+</body>
+</html>

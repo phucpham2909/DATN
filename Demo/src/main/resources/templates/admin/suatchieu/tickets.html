@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html th:replace="~{/shared/layout::view(~{::title}, ~{::article})}"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Chọn ghế</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+	integrity="sha512-KxQ4Yq1pP6a7t5n8+ZoX+Vv7YVq6XWhdE1AWOflXU2T/GRFct9rUuQxI9z8JmJbG3QkzV8jIVvM+YIvF3vnYtQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+	<article class="container mb-5 ">
+		<div class="card mt-3">
+			<form action="/film/chosseTickets" method="post">
+				<h3 class="bg-dark p-1 text-white text-center text-uppercase">Mua Vé online</h3>
+
+				<div class="mb-3 bg-light ms-3">
+					<b>Địa Chỉ Rạp</b> <b>|</b> <b>Cinema ?</b> <b>|</b> <b>Số ghế
+						(???/???)</b><br> <b>Ngày/Tháng/Năm Giờ:Phút</b> <b>~</b> <b>Ngày/Tháng/Năm
+						Giờ:Phút</b><br>
+				</div>
+
+				<h5 class="bg-secondary p-1 text-white text-center">Người / Ghế</h5>
+				<img alt="" src="/images/screen.png" class="mx-auto ms-4 mb-3">
+
+				<div class="d-flex flex-column align-items-center gap-3 mb-4 mt-5">
+
+					<!-- Lặp qua từng hàng -->
+					<div th:each="entry : ${seatMap}" class="d-flex align-items-center">
+						<!-- Tên hàng bên trái -->
+						<span class="fw-bold me-3" th:text="${entry.key}"></span>
+
+						<!-- Dãy ghế trong hàng -->
+						<div class="d-flex flex-wrap justify-content-center gap-2">
+							<div th:each="seat : ${entry.value}">
+								<input type="checkbox" th:id="${seat}" th:name="selectedSeats"
+									th:value="${seat}" class="btn-check"> <label
+									th:for="${seat}" class="btn fw-semibold"
+									th:classappend="${
+		#lists.contains({'A','B','C'}, seat.substring(0,1)) ?
+			((selectedSeats != null and #lists.contains(selectedSeats, seat)) ? ' btn-danger' : ' btn-outline-success') :
+			((selectedSeats != null and #lists.contains(selectedSeats, seat)) ? ' btn-danger' : ' btn-outline-danger')
+	}"
+									style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;"
+									th:text="${seat}"> </label>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container mt-3 mb-3">
+					<div class="row justify-content-center">
+						<div class="col-auto">
+							<!-- Hàng 1 -->
+							<div class="d-flex align-items-center mb-2">
+								<div class="rounded me-2"
+									style="width: 20px; height: 20px; background-color: brown;"></div>
+								<label class="me-4">Checked</label>
+								<div class="rounded me-3 border border-success"
+									style="width: 20px; height: 20px; background-color: white;"></div>
+								<label class="me-4">Thường</label>
+							</div>
+
+							<!-- Hàng 2 -->
+							<div class="d-flex align-items-center">
+
+								<div class="rounded me-2"
+									style="width: 20px; height: 20px; background-color: gray;"></div>
+								<label class="me-4"> Đã chọn</label>
+								<div class="rounded me-3 border border-danger"
+									style="width: 20px; height: 20px; background-color: white;"></div>
+								<label class="me-4">VIP</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="container bg-dark text-white p-3 rounded">
+					<div class="row align-items-center">
+						<!-- Cột ảnh -->
+						<div class="col-md-2 text-center">
+							<img src="/images/avatar.jpg" alt="Avatar"
+								class="img-fluid rounded">
+						</div>
+
+						<!-- Cột thông tin phim -->
+						<div class="col-md-3">
+							<h6 class="fw-bold mb-1">AVATAR: DÒNG CHẢY CỦA NƯỚC (CHIẾU
+								LẠI)</h6>
+							<p class="mb-1">3D</p>
+							<p class="mb-1">T13</p>
+						</div>
+
+						<!-- Cột thông tin rạp -->
+						<div class="col-md-3">
+							<div class="d-flex justify-content-between">
+								<span>Rạp</span> <span class="fw-bold">HT_Cinema Cần Thơ</span>
+							</div>
+							<div class="d-flex justify-content-between">
+								<span>Suất chiếu</span> <span class="fw-bold">18:10,
+									05/10/2025</span>
+							</div>
+							<div class="d-flex justify-content-between">
+								<span>Phòng chiếu</span> <span class="fw-bold">Cinema 4</span>
+							</div>
+						</div>
+
+						<!-- Cột giá vé -->
+						<div class="col-md-2">
+							<div class="d-flex justify-content-between">
+								<span>Tiền vé</span> <span>0,00 đ</span>
+							</div>
+							<div class="d-flex justify-content-between">
+								<span>Combo</span> <span>0,00 đ</span>
+							</div>
+							<div class="d-flex justify-content-between fw-bold">
+								<span>Tổng</span> <span>0,00 đ</span>
+							</div>
+						</div>
+						<div
+							class="col-md-2 text-center d-flex align-items-center justify-content-center">
+							<button type="submit" class="btn btn-danger "
+								style="width: 100px; height: 100px;">
+								<i class="fw-bold mb-1">Tiếp Tục</i> <i
+									class="fa-solid fa-angles-right fs-3"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</article>
+</body>
+</html>

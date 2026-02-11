@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{/shared/layout::view(~{::title}, ~{::article})}">
+<head>
+<meta charset="UTF-8">
+<title>Hoàn tất đặt vé</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<style>
+body{
+    background: radial-gradient(circle at top, #f8f9fa, #e9ecef);
+}
+
+/* ========= TICKET ========= */
+.ticket {
+    max-width: 680px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* răng cưa 2 bên */
+.ticket::before,
+.ticket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    background: #e9ecef;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+.ticket::before { left: -12px; }
+.ticket::after { right: -12px; }
+
+/* header */
+.ticket-header{
+    background: linear-gradient(135deg,#198754,#20c997);
+    color:#fff;
+    padding:20px 25px;
+    text-align:center;
+}
+.ticket-header h2{
+    margin:0;
+    font-weight:700;
+}
+.ticket-header p{
+    margin:5px 0 0;
+    opacity:.9;
+}
+
+/* body */
+.ticket-body{
+    padding:25px;
+}
+
+/* dotted line */
+.hr-dash{
+    border-top:2px dashed #ccc;
+    margin:20px 0;
+}
+
+/* info row */
+.info p{
+    margin-bottom:6px;
+}
+
+/* lists */
+.list{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+.list li{
+    padding:8px 0;
+    border-bottom:1px dashed #ddd;
+    font-size:0.95rem;
+}
+
+/* total */
+.total-box{
+    background:#f8f9fa;
+    border-radius:12px;
+    padding:15px;
+    text-align:right;
+}
+.total{
+    font-size:1.6rem;
+    font-weight:700;
+    color:#dc3545;
+}
+
+/* footer */
+.ticket-footer{
+    text-align:center;
+    padding:20px;
+}
+.ticket-footer a{
+    border-radius:25px;
+    padding:8px 30px;
+}
+</style>
+</head>
+
+<body>
+
+<article>
+
+<div class="ticket">
+
+    <!-- ===== HEADER ===== -->
+    <div class="ticket-header">
+        <h2>🎉 Đặt vé thành công</h2>
+        <p>
+            Mã đặt vé:
+            <strong th:text="${booking.id}"></strong>
+        </p>
+    </div>
+
+    <!-- ===== BODY ===== -->
+    <div class="ticket-body">
+
+        <!-- FILM INFO -->
+        <div class="info">
+            <h5 class="text-primary fw-bold mb-2">🎬 Thông tin phim</h5>
+            <p><strong>Tên phim:</strong>
+                <span th:text="${booking.suatChieu.detailFilm.film.name}"></span>
+            </p>
+            <p><strong>Ngày chiếu:</strong>
+                <span th:text="${booking.suatChieu.date}"></span>
+            </p>
+            <p><strong>Giờ chiếu:</strong>
+                <span th:text="${booking.suatChieu.gioBatDau}"></span>
+                -
+                <span th:text="${booking.suatChieu.gioKetThuc}"></span>
+            </p>
+        </div>
+
+        <div class="hr-dash"></div>
+
+        <!-- SEATS -->
+        <h5 class="text-primary fw-bold">💺 Ghế đã chọn</h5>
+        <ul class="list mb-3">
+            <li th:each="ve : ${veList}">
+                <strong th:text="${ve.seats.name}"></strong>
+                <span class="float-end"
+                      th:text="${#numbers.formatDecimal(ve.price,0,'POINT',0,'COMMA')} + ' VND'"></span>
+            </li>
+        </ul>
+
+        <!-- COMBO -->
+        <h5 class="text-success fw-bold">🍿 Combo</h5>
+
+        <ul class="list mb-3"
+            th:if="${comboList != null && !comboList.isEmpty()}">
+            <li th:each="cb : ${comboList}">
+                <strong th:text="${cb.product.name}"></strong>
+                <span class="text-muted">
+                    (x <span th:text="${cb.quantity}"></span>)
+                </span>
+                <span class="float-end"
+                      th:text="${#numbers.formatDecimal(cb.product.price * cb.quantity,0,'POINT',0,'COMMA')} + ' VND'"></span>
+            </li>
+        </ul>
+
+        <p th:if="${comboList == null || comboList.isEmpty()}"
+           class="text-muted fst-italic">
+            Không có combo được chọn
+        </p>
+
+        <div class="hr-dash"></div>
+
+        <!-- TOTAL -->
+        <div class="total-box">
+        <small class="text-muted">Tổng tiền thanh toán</small>
+            <div class="total"
+                 th:text="${#numbers.formatDecimal(totalPrice,0,'POINT',0,'COMMA')} + ' VND'"></div>
+            
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="ticket-footer">
+        <a href="/" class="btn btn-primary">
+            ⬅ Về trang chủ
+        </a>
+    </div>
+
+</div>
+
+</article>
+
+</body>
+</html>

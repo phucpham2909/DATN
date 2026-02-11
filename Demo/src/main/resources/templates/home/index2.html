@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout2 :: layout(~{::head}, ~{::body})}">
+
+<head>
+  <style>
+    .movie-card { background:#fff; border-radius:8px; overflow:hidden; transition:0.3s; }
+    .movie-card:hover { transform:translateY(-5px); box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+    .movie-img { height:250px; object-fit:cover; width:100%; }
+    .movie-info { padding:15px; }
+    .rating { background:#ffc107; border-radius:50%; width:40px; height:40px;
+              display:flex; align-items:center; justify-content:center; font-weight:bold; }
+  </style>
+</head>
+
+<body>
+  <h3 class="fw-bold mb-4 text-uppercase">🎞 Now in the Cinema</h3>
+  <div class="row g-4">
+    <div class="col-6 col-md-4 col-lg-3" th:each="movie : ${movies}">
+      <div class="movie-card">
+        <img th:src="${movie.image}" class="movie-img" th:alt="${movie.title}">
+        <div class="movie-info">
+          <h6 th:text="${movie.title}"></h6>
+          <p class="text-muted small" th:text="${movie.genre}"></p>
+          <div class="d-flex align-items-center justify-content-between">
+            <a th:href="@{'/movie/' + ${movie.id}}" class="btn btn-outline-danger btn-sm">Xem</a>
+            <div class="rating" th:text="${movie.rating}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
